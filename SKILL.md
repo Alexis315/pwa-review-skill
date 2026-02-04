@@ -1,6 +1,6 @@
 ---
 name: pwa-review
-description: Comprehensive 127-point PWA audit beyond Lighthouse - analyzes manifest, service worker, offline capabilities, security, and advanced PWA features
+description: Comprehensive 150-point PWA audit beyond Lighthouse - analyzes manifest, service worker, offline capabilities, security, and advanced PWA features
 user_invocable: true
 args:
   - name: url
@@ -12,22 +12,22 @@ args:
 
 # PWA Review Skill
 
-A comprehensive Progressive Web App audit that goes beyond standard Lighthouse testing. This skill analyzes PWAs across 10 categories with a 127-point scoring system, including advanced features that typical audits miss.
+A comprehensive Progressive Web App audit that goes beyond standard Lighthouse testing. This skill analyzes PWAs across 10 categories with a 150-point scoring system, including advanced features that typical audits miss.
 
 ## Scoring Overview
 
 | Category | Points | Focus |
 |----------|--------|-------|
 | Manifest Compliance | 20 | Essential manifest fields |
-| Advanced Manifest | 11 | Enhanced manifest features |
-| Service Worker & Caching | 22 | SW implementation quality |
+| Advanced Manifest | 13 | Enhanced manifest features |
+| Service Worker & Caching | 28 | SW implementation quality |
 | Offline Capability | 10 | Offline functionality |
-| Installability | 10 | Install requirements |
-| Security | 12 | Security measures |
-| Performance Signals | 10 | Performance optimization |
-| UX & Accessibility | 10 | User experience |
+| Installability | 13 | Install requirements |
+| Security | 16 | Security measures |
+| Performance Signals | 14 | Performance optimization |
+| UX & Accessibility | 12 | User experience |
 | SEO & Discoverability | 7 | Search optimization |
-| PWA Advanced | 15 | Cutting-edge PWA features |
+| PWA Advanced | 17 | Cutting-edge PWA features |
 
 **Grading Scale:** A+ (90%+), A (80-89%), B (70-79%), C (60-69%), D (40-59%), F (<40%)
 
@@ -120,7 +120,7 @@ Output a markdown report following the template at the end of this document.
 
 **Critical Blocker:** If manifest is missing entirely, this category scores 0/20.
 
-### Category 2: Advanced Manifest Features (11 points)
+### Category 2: Advanced Manifest Features (13 points)
 
 | Check | Points | How to Verify |
 |-------|--------|---------------|
@@ -133,8 +133,10 @@ Output a markdown report following the template at the end of this document.
 | `id` field for app identity | 1 | manifest.id exists |
 | `scope` properly defined | 1 | manifest.scope exists |
 | Maskable icon present | 1 | icons array has item with purpose="maskable" or "any maskable" |
+| `note_taking` object | 1 | manifest.note_taking exists (ChromeOS lock screen notes) |
+| `widgets` array | 1 | manifest.widgets exists (Windows 11 Widgets Board) |
 
-### Category 3: Service Worker & Caching (22 points)
+### Category 3: Service Worker & Caching (28 points)
 
 | Check | Points | How to Verify |
 |-------|--------|---------------|
@@ -145,10 +147,16 @@ Output a markdown report following the template at the end of this document.
 | Cache API usage (caches.open/put/match) | 3 | SW contains caches.open or cache.put or cache.match |
 | Cache versioning/naming strategy | 2 | SW has cache name variable (CACHE_NAME, CACHE_VERSION, etc.) |
 | Old cache cleanup in activate | 2 | activate handler deletes old caches |
-| Background Sync support | 2 | SW contains addEventListener('sync', ...) or addEventListener('periodicsync', ...) for offline queue processing |
+| Background Sync support | 2 | SW contains addEventListener('sync', ...) or addEventListener('periodicsync', ...) |
 | Workbox usage (bonus, not required) | 1 | SW imports workbox or uses workbox.* methods |
+| `skipWaiting()` usage | 1 | SW contains self.skipWaiting() for instant activation |
+| `clients.claim()` usage | 1 | SW contains clients.claim() for immediate control |
+| Navigation preload | 1 | SW uses navigationPreload.enable() |
+| Stale-while-revalidate pattern | 1 | fetch handler serves cache then updates in background |
+| Push event handler | 1 | SW contains addEventListener('push', ...) |
+| notificationclick handler | 1 | SW contains addEventListener('notificationclick', ...) |
 
-**Critical Blocker:** If no service worker, this category scores 0/22.
+**Critical Blocker:** If no service worker, this category scores 0/28.
 
 ### Category 4: Offline Capability (10 points)
 
@@ -159,7 +167,7 @@ Output a markdown report following the template at the end of this document.
 | Offline indicator in UI (code pattern) | 2 | Code checks navigator.onLine or listens to online/offline events |
 | Network-first or cache-first strategy evident | 2 | fetch handler has clear strategy pattern |
 
-### Category 5: Installability Requirements (10 points)
+### Category 5: Installability Requirements (13 points)
 
 | Check | Points | How to Verify |
 |-------|--------|---------------|
@@ -169,10 +177,12 @@ Output a markdown report following the template at the end of this document.
 | 192x192 icon present | 1 | Covered in manifest, cross-check |
 | 512x512 icon present | 1 | Covered in manifest, cross-check |
 | `apple-touch-icon` for iOS | 1 | <link rel="apple-touch-icon"> in HTML |
+| `beforeinstallprompt` handled | 2 | HTML/JS contains beforeinstallprompt event listener |
+| Custom install UI | 1 | Code shows/hides custom install button |
 
 **Note:** `prefer_related_applications: true` in manifest BLOCKS browser install prompt - flag as CRITICAL if found.
 
-### Category 6: Security Measures (12 points)
+### Category 6: Security Measures (16 points)
 
 | Check | Points | How to Verify |
 |-------|--------|---------------|
@@ -181,9 +191,15 @@ Output a markdown report following the template at the end of this document.
 | Subresource Integrity (SRI) on scripts | 2 | <script> tags have integrity="sha..." |
 | No mixed content | 2 | No http:// resources loaded on https:// page |
 | scope restricted appropriately | 1 | manifest.scope doesn't expose unnecessary paths |
-| Cross-Origin Isolation (COOP/COEP) | 2 | Headers: Cross-Origin-Opener-Policy, Cross-Origin-Embedder-Policy (required for SharedArrayBuffer) |
+| Cross-Origin Isolation (COOP/COEP) | 2 | Headers: Cross-Origin-Opener-Policy, Cross-Origin-Embedder-Policy |
+| HSTS header | 1 | Strict-Transport-Security header (note: not detectable from HTML) |
+| X-Content-Type-Options | 1 | nosniff header present (note: not detectable from HTML) |
+| Referrer-Policy | 1 | Appropriate referrer policy set via meta or header |
+| Permissions-Policy | 1 | Feature policy defined (note: not detectable from HTML) |
 
-### Category 7: Performance Signals (10 points)
+**Note:** Some security headers (HSTS, X-Content-Type-Options, Permissions-Policy) cannot be verified from HTML alone. Mark as "Unable to verify" unless response headers are available.
+
+### Category 7: Performance Signals (14 points)
 
 | Check | Points | How to Verify |
 |-------|--------|---------------|
@@ -192,8 +208,12 @@ Output a markdown report following the template at the end of this document.
 | Resource hints present | 2 | <link rel="preload/prefetch/preconnect"> found |
 | Code splitting indicators | 2 | Multiple JS chunks or dynamic import() usage |
 | Font optimization | 2 | font-display: swap or preloaded fonts |
+| LCP optimization signals | 1 | Hero image preloaded, above-fold content prioritized |
+| INP optimization signals | 1 | No long tasks, event handlers optimized (qualitative) |
+| CLS prevention | 1 | Images have width/height, no layout shifts expected |
+| Critical CSS inlined | 1 | Critical styles in <head> or preloaded |
 
-### Category 8: UX & Accessibility (10 points)
+### Category 8: UX & Accessibility (12 points)
 
 | Check | Points | How to Verify |
 |-------|--------|---------------|
@@ -202,6 +222,8 @@ Output a markdown report following the template at the end of this document.
 | ARIA landmarks or roles | 2 | role="..." or aria-* attributes found |
 | Language declared | 2 | <html lang="..."> attribute present |
 | Touch-friendly targets | 2 | No evidence of tiny click targets (qualitative) |
+| Focus indicators visible | 1 | :focus styles not removed, visible outlines (qualitative) |
+| Skip to main content link | 1 | Skip link present for keyboard navigation |
 
 ### Category 9: SEO & Discoverability (7 points)
 
@@ -213,7 +235,7 @@ Output a markdown report following the template at the end of this document.
 | Canonical URL | 1 | <link rel="canonical" href="..."> |
 | Structured data (JSON-LD) | 1 | <script type="application/ld+json"> found |
 
-### Category 10: PWA Advanced Capabilities (15 points)
+### Category 10: PWA Advanced Capabilities (17 points)
 
 | Check | Points | How to Verify |
 |-------|--------|---------------|
@@ -227,6 +249,8 @@ Output a markdown report following the template at the end of this document.
 | `scope_extensions` | 1 | manifest.scope_extensions array exists |
 | `related_applications` (informational) | 1 | manifest.related_applications exists |
 | `prefer_related_applications` is false/absent | 1 | Value is false or field is missing (true = CRITICAL issue) |
+| Web Push configured | 1 | VAPID or gcm_sender_id in manifest |
+| Notification permission UX | 1 | Permission requested after user action, not on load |
 
 ---
 
@@ -247,12 +271,16 @@ Output a markdown report following the template at the end of this document.
 - Missing apple-touch-icon
 - No cache versioning strategy
 - Missing meta description
+- No skipWaiting/clients.claim
+- No beforeinstallprompt handling
 
 ### Informational (Nice to Have)
 - Missing advanced manifest features
 - No PWA advanced capabilities
 - No structured data
 - Missing shortcuts
+- No navigation preload
+- No stale-while-revalidate
 
 ---
 
@@ -265,7 +293,7 @@ Generate the report in this exact format:
 
 **URL:** [analyzed URL]
 **Date:** [current date]
-**Overall Score:** [X]/127 ([percentage]%) — Grade: [letter grade]
+**Overall Score:** [X]/150 ([percentage]%) — Grade: [letter grade]
 
 ---
 
@@ -274,15 +302,15 @@ Generate the report in this exact format:
 | Category | Score | Status |
 |----------|-------|--------|
 | Manifest Compliance | X/20 | [status emoji] |
-| Advanced Manifest | X/11 | [status emoji] |
-| Service Worker & Caching | X/22 | [status emoji] |
+| Advanced Manifest | X/13 | [status emoji] |
+| Service Worker & Caching | X/28 | [status emoji] |
 | Offline Capability | X/10 | [status emoji] |
-| Installability | X/10 | [status emoji] |
-| Security | X/12 | [status emoji] |
-| Performance Signals | X/10 | [status emoji] |
-| UX & Accessibility | X/10 | [status emoji] |
+| Installability | X/13 | [status emoji] |
+| Security | X/16 | [status emoji] |
+| Performance Signals | X/14 | [status emoji] |
+| UX & Accessibility | X/12 | [status emoji] |
 | SEO & Discoverability | X/7 | [status emoji] |
-| PWA Advanced | X/15 | [status emoji] |
+| PWA Advanced | X/17 | [status emoji] |
 
 Status: Pass (80%+), Warn (50-79%), Fail (<50%)
 
@@ -331,7 +359,7 @@ Status: Pass (80%+), Warn (50-79%), Fail (<50%)
 
 ---
 
-*Generated by PWA Review Skill v3.1.1*
+*Generated by PWA Review Skill v4.0.0*
 ```
 
 ---
@@ -340,12 +368,12 @@ Status: Pass (80%+), Warn (50-79%), Fail (<50%)
 
 ### Manifest Not Found
 - Score Category 1 (Manifest Compliance) as 0/20
-- Score Category 2 (Advanced Manifest) as 0/11
+- Score Category 2 (Advanced Manifest) as 0/13
 - Add CRITICAL issue: "No manifest.json found"
 - Continue with remaining categories
 
 ### Service Worker Not Found
-- Score Category 3 (Service Worker & Caching) as 0/22
+- Score Category 3 (Service Worker & Caching) as 0/28
 - Score Category 4 (Offline Capability) as 0/10
 - Reduce Category 5 (Installability) by 2 points
 - Add CRITICAL issue: "No service worker registered"

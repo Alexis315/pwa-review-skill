@@ -2,28 +2,28 @@
 
 **URL:** http://example.com
 **Date:** 2026-02-04 12:40 UTC
-**Overall Score:** 3/127 — Grade: 🚫 **F** (Not a Functional PWA)
+**Overall Score:** 3/150 — Grade: F (Not a Functional PWA)
 
 ## Score Overview
 
 ```
-Overall: [█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 3/127
+Overall: [█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 3/150
 ```
 
 | Category | Score | Bar |
 |----------|-------|-----|
-| 📋 Manifest Compliance | 0/20 (0%) | `[░░░░░░░░░░] 0/20` |
-| 🧩 Advanced Manifest | 0/11 (0%) | `[░░░░░░░░░░] 0/11` |
-| ⚙️ Service Worker & Caching | 0/22 (0%) | `[░░░░░░░░░░] 0/22` |
-| 📡 Offline Capability | 0/10 (0%) | `[░░░░░░░░░░] 0/10` |
-| 📲 Installability | 0/10 (0%) | `[░░░░░░░░░░] 0/10` |
-| 🔒 Security | 0/12 (0%) | `[░░░░░░░░░░] 0/12` |
-| ⚡ Performance Signals | 3/10 (30%) | `[███░░░░░░░] 3/10` |
-| 🎨 UX & Accessibility | 0/10 (0%) | `[░░░░░░░░░░] 0/10` |
-| 🔍 SEO & Discoverability | 0/7 (0%) | `[░░░░░░░░░░] 0/7` |
-| 🚀 PWA Advanced | 0/15 (0%) | `[░░░░░░░░░░] 0/15` |
+| Manifest Compliance | 0/20 (0%) | `[░░░░░░░░░░] 0/20` |
+| Advanced Manifest | 0/13 (0%) | `[░░░░░░░░░░] 0/13` |
+| Service Worker & Caching | 0/28 (0%) | `[░░░░░░░░░░] 0/28` |
+| Offline Capability | 0/10 (0%) | `[░░░░░░░░░░] 0/10` |
+| Installability | 0/13 (0%) | `[░░░░░░░░░░] 0/13` |
+| Security | 0/16 (0%) | `[░░░░░░░░░░] 0/16` |
+| Performance Signals | 3/14 (21%) | `[██░░░░░░░░] 3/14` |
+| UX & Accessibility | 0/12 (0%) | `[░░░░░░░░░░] 0/12` |
+| SEO & Discoverability | 0/7 (0%) | `[░░░░░░░░░░] 0/7` |
+| PWA Advanced | 0/17 (0%) | `[░░░░░░░░░░] 0/17` |
 
-## 🚨 Critical Findings
+## Critical Findings
 
 These issues **block** PWA functionality or installability:
 
@@ -40,7 +40,7 @@ These issues **block** PWA functionality or installability:
 - **[Performance]** Missing viewport meta tag
 - **[UX & A11y]** No responsive viewport
 
-## ⚠️ Warnings
+## Warnings
 
 These items need improvement:
 
@@ -49,115 +49,141 @@ These items need improvement:
 - **[Offline]** No offline/online state indicator
 - **[Installability]** No SW fetch handler — may block install
 - **[Installability]** No apple-touch-icon — generic iOS icon
+- **[Installability]** No beforeinstallprompt handling
+- **[Installability]** No custom install UI
 - **[Security]** No CSP meta tag detected
   - CSP via HTTP header is preferred and not detectable from HTML alone.
 - **[Security]** 3 external resources without SRI
+- **[Security]** No COOP/COEP headers
+- **[Security]** No Referrer-Policy
 - **[Performance]** No async/defer
 - **[Performance]** No resource hints
+- **[Performance]** No LCP optimization
+- **[Performance]** No CLS prevention (images missing dimensions)
+- **[Performance]** No critical CSS inlined
 - **[UX & A11y]** No semantic HTML landmarks
 - **[UX & A11y]** No ARIA attributes
 - **[UX & A11y]** Missing lang on <html>
 - **[UX & A11y]** No <meta name='theme-color'>
+- **[UX & A11y]** No focus indicators
+- **[UX & A11y]** No skip to main content link
 
-## ℹ️ Notes
+## Notes
 
 - **[Advanced Manifest]** Skipped — no manifest available
 - **[Offline]** No static asset caching in SW
 - **[Installability]** No custom install prompt (browser default)
 - **[UX & A11y]** No iOS status bar styling
 
-## 📌 Prioritized Recommendations
+## Prioritized Recommendations
 
-### 🔴 High Priority (Blockers)
+### High Priority (Blockers)
 
 1. **No manifest.json found** (Manifest)
    - PWA requires a valid web app manifest
-   - 💡 **How to fix:** Create a `manifest.json` and add `<link rel="manifest" href="/manifest.json">` in your HTML `<head>`.
+   - **How to fix:** Create a `manifest.json` and add `<link rel="manifest" href="/manifest.json">` in your HTML `<head>`.
 2. **No service worker registration in HTML** (Service Worker)
-   - 💡 **How to fix:** Register a service worker:
+   - **How to fix:** Register a service worker:
 ```js
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/sw.js");
 }
 ```
 3. **No service worker found** (Service Worker)
-   - 💡 **How to fix:** Register a service worker:
+   - **How to fix:** Register a service worker:
 ```js
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/sw.js");
 }
 ```
 4. **No <link rel='manifest'> in HTML** (Installability)
-   - 💡 **How to fix:** Add `<link rel="manifest" href="/manifest.json">` in `<head>`.
+   - **How to fix:** Add `<link rel="manifest" href="/manifest.json">` in `<head>`.
 5. **Not HTTPS — install blocked** (Installability)
-   - 💡 **How to fix:** Serve your site over HTTPS. Use Let's Encrypt for free TLS certificates.
+   - **How to fix:** Serve your site over HTTPS. Use Let's Encrypt for free TLS certificates.
 6. **Not HTTPS — all PWA features require secure origin** (Security)
-   - 💡 **How to fix:** Serve your site over HTTPS. Use Let's Encrypt for free TLS certificates.
+   - **How to fix:** Serve your site over HTTPS. Use Let's Encrypt for free TLS certificates.
 7. **3 mixed content references (http://)** (Security)
    - Blocked by browsers, breaks SW
-   - 💡 **How to fix:** Replace all `http://` references with `https://` in src, href, and action attributes.
+   - **How to fix:** Replace all `http://` references with `https://` in src, href, and action attributes.
 8. **3 render-blocking scripts** (Performance)
-   - 💡 **How to fix:** Add `async`, `defer`, or `type="module"` to `<script>` tags in `<head>`.
+   - **How to fix:** Add `async`, `defer`, or `type="module"` to `<script>` tags in `<head>`.
 9. **Missing viewport meta tag** (Performance)
-   - 💡 **How to fix:** Add `<meta name="viewport" content="width=device-width, initial-scale=1">` in `<head>`.
+   - **How to fix:** Add `<meta name="viewport" content="width=device-width, initial-scale=1">` in `<head>`.
 10. **No responsive viewport** (UX & A11y)
-   - 💡 **How to fix:** Add `<meta name="viewport" content="width=device-width, initial-scale=1">` in `<head>`.
+   - **How to fix:** Add `<meta name="viewport" content="width=device-width, initial-scale=1">` in `<head>`.
 
-### 🟡 Medium Priority (Improvements)
+### Medium Priority (Improvements)
 
 1. **No offline fallback page** (Offline)
-   - 💡 **How to fix:** Cache an offline page and serve on fetch fail:
+   - **How to fix:** Cache an offline page and serve on fetch fail:
 ```js
 .catch(() => caches.match("/offline.html"))
 ```
 2. **No app shell caching detected** (Offline)
 3. **No offline/online state indicator** (Offline)
-   - 💡 **How to fix:** Detect offline state:
+   - **How to fix:** Detect offline state:
 ```js
 window.addEventListener("offline", () => showBanner("You are offline"));
 window.addEventListener("online", () => hideBanner());
 ```
 4. **No SW fetch handler — may block install** (Installability)
-   - 💡 **How to fix:** Add fetch handler:
+   - **How to fix:** Add fetch handler:
 ```js
 self.addEventListener("fetch", e => {
   e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
 });
 ```
 5. **No apple-touch-icon — generic iOS icon** (Installability)
-   - 💡 **How to fix:** Add `<link rel="apple-touch-icon" href="/apple-touch-icon.png">` (180×180px).
-6. **No CSP meta tag detected** (Security)
-   - 💡 **How to fix:** Add CSP meta tag:
+   - **How to fix:** Add `<link rel="apple-touch-icon" href="/apple-touch-icon.png">` (180×180px).
+6. **No beforeinstallprompt handling** (Installability)
+   - **How to fix:** Add install prompt handler:
+```js
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallButton();
+});
+```
+7. **No CSP meta tag detected** (Security)
+   - **How to fix:** Add CSP meta tag:
 ```html
 <meta http-equiv="Content-Security-Policy"
   content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
 ```
 Or better: set via HTTP header.
-7. **3 external resources without SRI** (Security)
-   - 💡 **How to fix:** Add integrity to external scripts:
+8. **3 external resources without SRI** (Security)
+   - **How to fix:** Add integrity to external scripts:
 ```html
 <script src="https://cdn.example.com/lib.js"
   integrity="sha384-..." crossorigin="anonymous"></script>
 ```
 Generate hashes at https://www.srihash.org/
-8. **No async/defer** (Performance)
-   - 💡 **How to fix:** Add `async`, `defer`, or `type="module"` to `<script>` tags in `<head>`.
-9. **No resource hints** (Performance)
-   - 💡 **How to fix:** Add resource hints:
+9. **No async/defer** (Performance)
+   - **How to fix:** Add `async`, `defer`, or `type="module"` to `<script>` tags in `<head>`.
+10. **No resource hints** (Performance)
+   - **How to fix:** Add resource hints:
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preload" href="/critical.css" as="style">
 ```
-10. **No semantic HTML landmarks** (UX & A11y)
-   - 💡 **How to fix:** Use semantic elements: `<header>`, `<nav>`, `<main>`, `<footer>`, `<article>`, `<section>`.
-11. **No ARIA attributes** (UX & A11y)
-   - 💡 **How to fix:** Add ARIA: `role="navigation"`, `aria-label="..."`, `aria-hidden="true"` where needed.
-12. **Missing lang on <html>** (UX & A11y)
-   - 💡 **How to fix:** Add language: `<html lang="en">` (use your BCP-47 language code).
-13. **No <meta name='theme-color'>** (UX & A11y)
-   - 💡 **How to fix:** Add `<meta name="theme-color" content="#your-color">` in `<head>`. Separate from manifest theme_color.
+11. **No semantic HTML landmarks** (UX & A11y)
+   - **How to fix:** Use semantic elements: `<header>`, `<nav>`, `<main>`, `<footer>`, `<article>`, `<section>`.
+12. **No ARIA attributes** (UX & A11y)
+   - **How to fix:** Add ARIA: `role="navigation"`, `aria-label="..."`, `aria-hidden="true"` where needed.
+13. **Missing lang on <html>** (UX & A11y)
+   - **How to fix:** Add language: `<html lang="en">` (use your BCP-47 language code).
+14. **No <meta name='theme-color'>** (UX & A11y)
+   - **How to fix:** Add `<meta name="theme-color" content="#your-color">` in `<head>`. Separate from manifest theme_color.
+15. **No focus indicators** (UX & A11y)
+   - **How to fix:** Ensure `:focus` styles are visible. Don't use `outline: none` without providing alternative focus styles.
+16. **No skip to main content link** (UX & A11y)
+   - **How to fix:** Add skip link as first focusable element:
+```html
+<a href="#main" class="skip-link">Skip to main content</a>
+```
 
-### ⚡ Quick Wins
+### Quick Wins
 
 These fixes take less than 5 minutes each:
 
@@ -167,7 +193,7 @@ These fixes take less than 5 minutes each:
 4. Not HTTPS — all PWA features require secure origin → Serve your site over HTTPS. Use Let's Encrypt for free TLS certificates.
 5. 3 mixed content references (http://) → Replace all `http://` references with `https://` in src, href, and action attributes.
 
-## 📚 Reference Links
+## Reference Links
 
 - **Installability**: https://web.dev/learn/pwa/installation/
 - **Manifest**: https://web.dev/add-manifest/
@@ -180,4 +206,4 @@ These fixes take less than 5 minutes each:
 - **Lighthouse**: https://developer.chrome.com/docs/lighthouse
 
 ---
-*Generated by PWA Review Skill v3.1.1*
+*Generated by PWA Review Skill v4.0.0*

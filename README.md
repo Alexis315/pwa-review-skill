@@ -1,11 +1,14 @@
 # PWA Review Skill for Claude Code
 
-A comprehensive Progressive Web App audit skill that goes beyond standard Lighthouse testing. Analyzes PWAs across **10 categories** with a **127-point scoring system**, including advanced features that typical audits miss.
+A comprehensive Progressive Web App audit skill that goes beyond standard Lighthouse testing. Analyzes PWAs across **10 categories** with a **150-point scoring system**, including advanced features that typical audits miss.
 
 ## Features
 
-- **127-point scoring system** across 10 categories
+- **150-point scoring system** across 10 categories
 - **Beyond Lighthouse**: Checks advanced PWA features like `handle_links`, `launch_handler`, `file_handlers`, `protocol_handlers`
+- **Core Web Vitals signals**: LCP, INP, and CLS optimization detection
+- **Enhanced Security**: HSTS, CSP, Permissions-Policy, COOP/COEP checks
+- **Install Experience**: beforeinstallprompt and custom install UI detection
 - **Actionable reports**: Each issue includes specific fix recommendations
 - **No dependencies**: Runs natively in Claude Code using WebFetch
 
@@ -14,26 +17,26 @@ A comprehensive Progressive Web App audit skill that goes beyond standard Lighth
 | Category | Points | What It Checks |
 |----------|--------|----------------|
 | Manifest Compliance | 20 | Required manifest fields (name, icons, display, colors) |
-| Advanced Manifest | 11 | Screenshots, shortcuts, i18n, maskable icons |
-| Service Worker & Caching | 22 | Registration, events, cache strategies, background sync |
+| Advanced Manifest | 13 | Screenshots, shortcuts, i18n, maskable icons, widgets, note_taking |
+| Service Worker & Caching | 28 | Registration, events, cache strategies, skipWaiting, clients.claim, push, navigation preload |
 | Offline Capability | 10 | Fallback pages, app shell, offline indicators |
-| Installability | 10 | HTTPS, manifest link, install requirements |
-| Security | 12 | CSP, SRI, HTTPS, COOP/COEP |
-| Performance Signals | 10 | Render-blocking, lazy loading, resource hints |
-| UX & Accessibility | 10 | Viewport, semantic HTML, ARIA |
+| Installability | 13 | HTTPS, manifest link, beforeinstallprompt, custom install UI |
+| Security | 16 | CSP, SRI, HTTPS, COOP/COEP, HSTS, Permissions-Policy |
+| Performance Signals | 14 | Render-blocking, lazy loading, resource hints, Core Web Vitals signals |
+| UX & Accessibility | 12 | Viewport, semantic HTML, ARIA, focus indicators, skip links |
 | SEO & Discoverability | 7 | Meta tags, Open Graph, structured data |
-| **PWA Advanced** | 15 | Cutting-edge PWA capabilities |
+| **PWA Advanced** | 17 | Cutting-edge PWA capabilities, Web Push |
 
 ## Grading Scale
 
-| Grade | Score Range |
-|-------|-------------|
-| A+ | 90%+ (115+ points) |
-| A | 80-89% (102-114 points) |
-| B | 70-79% (89-101 points) |
-| C | 60-69% (77-88 points) |
-| D | 40-59% (51-76 points) |
-| F | <40% (<51 points) |
+| Grade | Score Range | Percentage |
+|-------|-------------|------------|
+| A+ | 135+ points | 90%+ |
+| A | 120-134 points | 80-89% |
+| B | 105-119 points | 70-79% |
+| C | 90-104 points | 60-69% |
+| D | 60-89 points | 40-59% |
+| F | <60 points | <40% |
 
 ## Installation
 
@@ -80,7 +83,7 @@ Once installed, invoke the skill with:
 Claude will:
 1. Fetch the HTML from the URL
 2. Discover manifest and service worker locations
-3. Analyze both files against the 127-point checklist
+3. Analyze both files against the 150-point checklist
 4. Generate a detailed report with scores and recommendations
 
 ## Sample Output
@@ -89,23 +92,23 @@ Claude will:
 # PWA Audit Report
 
 **URL:** https://example.com
-**Date:** 2024-01-15
-**Overall Score:** 112/127 (88%) — Grade: A
+**Date:** 2026-02-04
+**Overall Score:** 132/150 (88%) — Grade: A
 
 ## Score Breakdown
 
 | Category | Score | Status |
 |----------|-------|--------|
 | Manifest Compliance | 18/20 | ✅ |
-| Advanced Manifest | 9/11 | ✅ |
-| Service Worker & Caching | 20/20 | ✅ |
+| Advanced Manifest | 11/13 | ✅ |
+| Service Worker & Caching | 26/28 | ✅ |
 | Offline Capability | 10/10 | ✅ |
-| Installability | 10/10 | ✅ |
-| Security | 7/10 | ⚠️ |
-| Performance Signals | 10/10 | ✅ |
-| UX & Accessibility | 10/10 | ✅ |
+| Installability | 12/13 | ✅ |
+| Security | 12/16 | ⚠️ |
+| Performance Signals | 14/14 | ✅ |
+| UX & Accessibility | 12/12 | ✅ |
 | SEO & Discoverability | 5/7 | ⚠️ |
-| PWA Advanced | 9/15 | ⚠️ |
+| PWA Advanced | 12/17 | ⚠️ |
 
 ## Critical Issues
 - None
@@ -130,8 +133,53 @@ Claude will:
 | `share_target` analysis | ❌ | ✅ |
 | `edge_side_panel` support | ❌ | ✅ |
 | `scope_extensions` check | ❌ | ✅ |
+| `note_taking` (ChromeOS) | ❌ | ✅ |
+| `widgets` (Windows 11) | ❌ | ✅ |
+| `skipWaiting`/`clients.claim` | ❌ | ✅ |
+| Navigation preload | ❌ | ✅ |
+| Stale-while-revalidate | ❌ | ✅ |
+| `beforeinstallprompt` | ❌ | ✅ |
+| Push/notificationclick | ❌ | ✅ |
 | Cache strategy analysis | Basic | Detailed |
 | iOS-specific guidance | Limited | Comprehensive |
+
+## v4.0.0 New Checks
+
+### Service Worker & Caching (+6 points)
+- `skipWaiting()` instant activation
+- `clients.claim()` immediate control
+- Navigation preload
+- Stale-while-revalidate pattern
+- Push event handler
+- notificationclick handler
+
+### Installability (+3 points)
+- `beforeinstallprompt` handling
+- Custom install UI detection
+
+### Security (+4 points)
+- HSTS header
+- X-Content-Type-Options
+- Referrer-Policy
+- Permissions-Policy
+
+### Performance Signals (+4 points)
+- LCP optimization signals
+- INP optimization signals
+- CLS prevention
+- Critical CSS inlined
+
+### UX & Accessibility (+2 points)
+- Focus indicators visible
+- Skip to main content link
+
+### Advanced Manifest (+2 points)
+- `note_taking` (ChromeOS)
+- `widgets` (Windows 11)
+
+### PWA Advanced (+2 points)
+- Web Push configured
+- Notification permission UX
 
 ## Contributing
 
@@ -150,5 +198,5 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-**Version:** 3.1.1
+**Version:** 4.0.0
 **Author:** [@emrahub](https://github.com/emrahub)

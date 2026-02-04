@@ -2,38 +2,40 @@
 
 **URL:** https://example.com
 **Date:** 2026-02-04 14:30 UTC
-**Overall Score:** 112/127 — Grade: 🏆 **A+** (Excellent PWA)
+**Overall Score:** 132/150 — Grade: A (Excellent PWA)
 
 ## Score Overview
 
 ```
-Overall: [███████████████████████████░░░] 112/127
+Overall: [█████████████████████████████░░] 132/150
 ```
 
 | Category | Score | Bar |
 |----------|-------|-----|
-| 📋 Manifest Compliance | 18/20 (90%) | `[█████████░] 18/20` |
-| 🧩 Advanced Manifest | 10/11 (91%) | `[█████████░] 10/11` |
-| ⚙️ Service Worker & Caching | 20/22 (91%) | `[█████████░] 20/22` |
-| 📡 Offline Capability | 8/10 (80%) | `[████████░░] 8/10` |
-| 📲 Installability | 9/10 (90%) | `[█████████░] 9/10` |
-| 🔒 Security | 9/12 (75%) | `[███████░░░] 9/12` |
-| ⚡ Performance Signals | 10/10 (100%) | `[██████████] 10/10` |
-| 🎨 UX & Accessibility | 10/10 (100%) | `[██████████] 10/10` |
-| 🔍 SEO & Discoverability | 6/7 (86%) | `[████████░░] 6/7` |
-| 🚀 PWA Advanced | 12/15 (80%) | `[████████░░] 12/15` |
+| Manifest Compliance | 18/20 (90%) | `[█████████░] 18/20` |
+| Advanced Manifest | 11/13 (85%) | `[████████░░] 11/13` |
+| Service Worker & Caching | 26/28 (93%) | `[█████████░] 26/28` |
+| Offline Capability | 8/10 (80%) | `[████████░░] 8/10` |
+| Installability | 12/13 (92%) | `[█████████░] 12/13` |
+| Security | 12/16 (75%) | `[███████░░░] 12/16` |
+| Performance Signals | 14/14 (100%) | `[██████████] 14/14` |
+| UX & Accessibility | 12/12 (100%) | `[██████████] 12/12` |
+| SEO & Discoverability | 6/7 (86%) | `[████████░░] 6/7` |
+| PWA Advanced | 13/17 (76%) | `[███████░░░] 13/17` |
 
-## ⚠️ Warnings
+## Warnings
 
 These items need improvement:
 
 - **[Security]** No CSP meta tag detected
   - CSP via HTTP header is preferred and not detectable from HTML alone.
+- **[Security]** HSTS header not verifiable from HTML
+- **[Security]** Permissions-Policy not verifiable from HTML
 - **[SEO & Discoverability]** No canonical URL
 - **[PWA Advanced]** No handle_links — links may open in browser
 - **[PWA Advanced]** iOS Safari lacks support for: push notifications
 
-## ✅ Passed Checks
+## Passed Checks
 
 ### Manifest & Advanced
 - **[Manifest]** name: 'Test Progressive Web App'
@@ -67,6 +69,8 @@ These items need improvement:
 - **[Service Worker]** Push notification handler found
 - **[Service Worker]** Notification click handler configured
 - **[Service Worker]** Background Sync handler detected
+- **[Service Worker]** Navigation preload enabled
+- **[Service Worker]** Stale-while-revalidate pattern detected
 
 ### Offline & Installability
 - **[Offline]** Offline fallback page detected
@@ -79,6 +83,7 @@ These items need improvement:
 - **[Installability]** 512x512 icon present
 - **[Installability]** Apple touch icon (iOS support)
 - **[Installability]** Custom install prompt (beforeinstallprompt) detected
+- **[Installability]** Custom install UI button found
 - **[Installability]** iOS web app capable meta tag
 
 ### Security & Performance
@@ -87,13 +92,18 @@ These items need improvement:
 - **[Security]** No mixed content
 - **[Security]** SW scope explicitly restricted
 - **[Security]** Error handling in SW
+- **[Security]** Referrer-Policy meta tag present
+- **[Security]** COOP/COEP headers detected
 - **[Performance]** No render-blocking scripts in <head>
 - **[Performance]** Lazy loading: 1/1
 - **[Performance]** Modern image formats (webp/avif)
 - **[Performance]** 2/2 scripts async/defer/module
-- **[Performance]** 2 resource hints
+- **[Performance]** 2 resource hints (preconnect, preload)
 - **[Performance]** font-display: swap
-- **[Performance]** Viewport meta tag present
+- **[Performance]** LCP: Hero image preloaded
+- **[Performance]** INP: No blocking event handlers
+- **[Performance]** CLS: Images have explicit dimensions
+- **[Performance]** Critical CSS inlined in <head>
 
 ### UX & SEO
 - **[UX & A11y]** Responsive viewport configured
@@ -103,39 +113,42 @@ These items need improvement:
 - **[UX & A11y]** lang attribute on <html>
 - **[UX & A11y]** iOS status bar styling
 - **[UX & A11y]** Theme color meta tag
+- **[UX & A11y]** Focus indicators preserved
+- **[UX & A11y]** Skip to main content link present
 - **[UX & A11y]** Fallback content for JS-disabled browsers (<noscript>)
 - **[SEO & Discoverability]** title: 'Test Progressive Web App' (26 chars)
 - **[SEO & Discoverability]** meta description: 120 chars
 - **[SEO & Discoverability]** Open Graph: og:title, og:description, og:image
 
-### 🚀 PWA Advanced Capabilities (Unique — Not in Lighthouse)
+### PWA Advanced Capabilities (Unique — Not in Lighthouse)
 - **[PWA Advanced]** launch_handler.client_mode: [navigate-existing]
 - **[PWA Advanced]** File handler: /open accepts .pdf, .txt
 - **[PWA Advanced]** Protocol handler: web+myapp:// → /handle?url=%s
 - **[PWA Advanced]** Screenshots with form_factor: wide + narrow
 - **[PWA Advanced]** All 1 shortcuts have icons
 - **[PWA Advanced]** share_target: POST /share (params: title, text, url)
+- **[PWA Advanced]** Web Push: gcm_sender_id configured
 
-## ℹ️ Notes
+## Notes
 
 - **[Advanced Manifest]** Window Controls Overlay enabled — native-like title bar on desktop
 - **[Advanced Manifest]** No 'dir' field — defaults to 'auto'
+- **[Advanced Manifest]** No note_taking (ChromeOS lock screen notes integration)
+- **[Advanced Manifest]** No widgets (Windows 11 Widgets Board integration)
 - **[Offline]** No static asset caching in SW
 - **[PWA Advanced]** Reuses existing window — prevents duplicate instances
 - **[PWA Advanced]** No scope_extensions (single-origin PWA)
 - **[PWA Advanced]** No edge_side_panel (Edge sidebar support)
 - **[PWA Advanced]** No tabbed display mode (experimental multi-tab)
 - **[PWA Advanced]** iOS PWA: No badging API, limited background sync, 50MB storage cap
-- **[PWA Advanced]** No note_taking (ChromeOS lock screen notes integration)
 - **[PWA Advanced]** No iarc_rating_id (IARC age rating for app store distribution)
-- **[PWA Advanced]** No widgets (Windows 11 Widgets Board integration)
 
-## 📌 Prioritized Recommendations
+## Prioritized Recommendations
 
-### 🟡 Medium Priority (Improvements)
+### Medium Priority (Improvements)
 
 1. **No CSP meta tag detected** (Security)
-   - 💡 **How to fix:** Add CSP meta tag:
+   - **How to fix:** Add CSP meta tag:
 ```html
 <meta http-equiv="Content-Security-Policy"
   content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
@@ -143,12 +156,18 @@ These items need improvement:
 Or better: set via HTTP header.
 
 2. **No canonical URL** (SEO & Discoverability)
-   - 💡 **How to fix:** Add `<link rel="canonical" href="https://example.com/">` in `<head>`.
+   - **How to fix:** Add `<link rel="canonical" href="https://example.com/">` in `<head>`.
 
 3. **No handle_links** (PWA Advanced)
-   - 💡 **How to fix:** Add `"handle_links": "preferred"` to manifest.json for in-app link handling.
+   - **How to fix:** Add `"handle_links": "preferred"` to manifest.json for in-app link handling.
 
-## 📚 Reference Links
+4. **No note_taking** (Advanced Manifest)
+   - **How to fix:** Add `"note_taking": { "new_note_url": "/notes/new" }` to manifest.json for ChromeOS integration.
+
+5. **No widgets** (Advanced Manifest)
+   - **How to fix:** Add `"widgets"` array to manifest.json for Windows 11 Widgets Board integration.
+
+## Reference Links
 
 - **Security**: https://web.dev/articles/csp
 - **SEO & Discoverability**: https://web.dev/articles/discoverable
@@ -157,4 +176,4 @@ Or better: set via HTTP header.
 - **Lighthouse**: https://developer.chrome.com/docs/lighthouse
 
 ---
-*Generated by PWA Review Skill v3.1.1*
+*Generated by PWA Review Skill v4.0.0*

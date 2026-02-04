@@ -1,5 +1,65 @@
 # Changelog
 
+## [4.0.0] - 2026-02-04
+
+### Added
+
+#### Service Worker & Caching (+6 points, now 28 total)
+- **skipWaiting() usage** (+1 pt) — Detects `self.skipWaiting()` for instant SW activation
+- **clients.claim() usage** (+1 pt) — Detects `clients.claim()` for immediate control
+- **Navigation preload** (+1 pt) — Detects `navigationPreload.enable()` usage
+- **Stale-while-revalidate pattern** (+1 pt) — Detects SWR caching strategy
+- **Push event handler** (+1 pt) — Detects `addEventListener('push', ...)`
+- **notificationclick handler** (+1 pt) — Detects `addEventListener('notificationclick', ...)`
+
+#### Installability (+3 points, now 13 total)
+- **beforeinstallprompt handled** (+2 pts) — Detects install prompt event listener
+- **Custom install UI** (+1 pt) — Detects custom install button implementation
+
+#### Security (+4 points, now 16 total)
+- **HSTS header** (+1 pt) — Strict-Transport-Security check (note only, not detectable from HTML)
+- **X-Content-Type-Options** (+1 pt) — nosniff header check
+- **Referrer-Policy** (+1 pt) — Appropriate referrer policy
+- **Permissions-Policy** (+1 pt) — Feature policy definition
+
+#### Performance Signals (+4 points, now 14 total)
+- **LCP optimization signals** (+1 pt) — Hero image preload, above-fold prioritization
+- **INP optimization signals** (+1 pt) — Event handler optimization indicators
+- **CLS prevention** (+1 pt) — Image dimensions, layout shift prevention
+- **Critical CSS inlined** (+1 pt) — Critical styles in head or preloaded
+
+#### UX & Accessibility (+2 points, now 12 total)
+- **Focus indicators visible** (+1 pt) — :focus styles not removed
+- **Skip to main content link** (+1 pt) — Skip link for keyboard navigation
+
+#### Advanced Manifest (+2 points, now 13 total)
+- **note_taking object** (+1 pt) — ChromeOS lock screen notes integration
+- **widgets array** (+1 pt) — Windows 11 Widgets Board integration
+
+#### PWA Advanced (+2 points, now 17 total)
+- **Web Push configured** (+1 pt) — VAPID or gcm_sender_id in manifest
+- **Notification permission UX** (+1 pt) — Permission timing best practice
+
+### Changed
+- **BREAKING**: Total scoring increased from 127 to **150 points**
+- Updated grading scale thresholds:
+  - A+: 135+ points (90%+)
+  - A: 120-134 points (80-89%)
+  - B: 105-119 points (70-79%)
+  - C: 90-104 points (60-69%)
+  - D: 60-89 points (40-59%)
+  - F: <60 points (<40%)
+- Report template updated for new category point totals
+- Error handling updated for new SW category total (0/28)
+- Issue classification expanded with new warning items
+
+### Migration Notes
+- Existing scores cannot be directly compared to v4.0.0 scores
+- A "good" PWA that scored 112/127 (88%) might score ~130/150 (87%) with new checks
+- New checks are additive — existing functionality still earns the same points
+
+---
+
 ## [3.1.1] - 2026-02-04
 
 ### Fixed
