@@ -1,10 +1,10 @@
 # PWA Review Skill for Claude Code
 
-A comprehensive Progressive Web App audit skill that goes beyond standard Lighthouse testing. Analyzes PWAs across **10 categories** with a **123-point scoring system**, including advanced features that typical audits miss.
+A comprehensive Progressive Web App audit skill that goes beyond standard Lighthouse testing. Analyzes PWAs across **10 categories** with a **127-point scoring system**, including advanced features that typical audits miss.
 
 ## Features
 
-- **123-point scoring system** across 10 categories
+- **127-point scoring system** across 10 categories
 - **Beyond Lighthouse**: Checks advanced PWA features like `handle_links`, `launch_handler`, `file_handlers`, `protocol_handlers`
 - **Actionable reports**: Each issue includes specific fix recommendations
 - **No dependencies**: Runs natively in Claude Code using WebFetch
@@ -15,10 +15,10 @@ A comprehensive Progressive Web App audit skill that goes beyond standard Lighth
 |----------|--------|----------------|
 | Manifest Compliance | 20 | Required manifest fields (name, icons, display, colors) |
 | Advanced Manifest | 11 | Screenshots, shortcuts, i18n, maskable icons |
-| Service Worker & Caching | 20 | Registration, events, cache strategies |
+| Service Worker & Caching | 22 | Registration, events, cache strategies, background sync |
 | Offline Capability | 10 | Fallback pages, app shell, offline indicators |
 | Installability | 10 | HTTPS, manifest link, install requirements |
-| Security | 10 | CSP, SRI, HTTPS enforcement |
+| Security | 12 | CSP, SRI, HTTPS, COOP/COEP |
 | Performance Signals | 10 | Render-blocking, lazy loading, resource hints |
 | UX & Accessibility | 10 | Viewport, semantic HTML, ARIA |
 | SEO & Discoverability | 7 | Meta tags, Open Graph, structured data |
@@ -28,12 +28,12 @@ A comprehensive Progressive Web App audit skill that goes beyond standard Lighth
 
 | Grade | Score Range |
 |-------|-------------|
-| A+ | 90%+ (111+ points) |
-| A | 80-89% (98-110 points) |
-| B | 70-79% (86-97 points) |
-| C | 60-69% (74-85 points) |
-| D | 40-59% (49-73 points) |
-| F | <40% (<49 points) |
+| A+ | 90%+ (115+ points) |
+| A | 80-89% (102-114 points) |
+| B | 70-79% (89-101 points) |
+| C | 60-69% (77-88 points) |
+| D | 40-59% (51-76 points) |
+| F | <40% (<51 points) |
 
 ## Installation
 
@@ -80,7 +80,7 @@ Once installed, invoke the skill with:
 Claude will:
 1. Fetch the HTML from the URL
 2. Discover manifest and service worker locations
-3. Analyze both files against the 123-point checklist
+3. Analyze both files against the 127-point checklist
 4. Generate a detailed report with scores and recommendations
 
 ## Sample Output
@@ -90,7 +90,7 @@ Claude will:
 
 **URL:** https://example.com
 **Date:** 2024-01-15
-**Overall Score:** 108/123 (88%) — Grade: A
+**Overall Score:** 112/127 (88%) — Grade: A
 
 ## Score Breakdown
 
@@ -150,5 +150,5 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-**Version:** 2.3
+**Version:** 3.1.0
 **Author:** [@emrahub](https://github.com/emrahub)

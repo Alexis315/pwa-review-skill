@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.1.0] - 2026-02-04
+
+### Added
+- **Background Sync check** in Service Worker category (+2 pts) — detects `sync` event listener for offline queue processing
+- **COOP/COEP check** in Security category (+2 pts) — Cross-Origin Isolation headers required for SharedArrayBuffer
+
+### Changed
+- Total scoring increased from 123 to **127 points**
+- Service Worker & Caching: 20 → 22 points
+- Security Measures: 10 → 12 points
+- Updated grading scale thresholds for new point total
+- Synchronized version numbers across all files (was showing v2.3 in some places)
+
+### Fixed
+- Version consistency: All files now show v3.1.0
+- Updated sample reports to reflect new scoring structure
+
+---
+
 ## [3.0.0] - 2026-02-04
 
 ### Changed
