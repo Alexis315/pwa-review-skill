@@ -1,14 +1,16 @@
 # PWA Review Skill for Claude Code
 
-A comprehensive Progressive Web App audit skill that goes beyond standard Lighthouse testing. Analyzes PWAs across **10 categories** with a **150-point scoring system**, including advanced features that typical audits miss.
+A comprehensive Progressive Web App audit skill that goes beyond standard Lighthouse testing. Analyzes PWAs across **11 categories** with a **160-point scoring system**, including advanced features and iOS-specific compatibility checks that typical audits miss.
 
 ## Features
 
-- **150-point scoring system** across 10 categories
+- **160-point scoring system** across 11 categories
 - **Beyond Lighthouse**: Checks advanced PWA features like `handle_links`, `launch_handler`, `file_handlers`, `protocol_handlers`
+- **iOS Compatibility**: Safe area handling, splash screens, touch events, notch/Dynamic Island support
 - **Core Web Vitals signals**: LCP, INP, and CLS optimization detection
 - **Enhanced Security**: HSTS, CSP, Permissions-Policy, COOP/COEP checks
 - **Install Experience**: beforeinstallprompt and custom install UI detection
+- **Update UX**: Service worker update notification patterns
 - **Actionable reports**: Each issue includes specific fix recommendations
 - **No dependencies**: Runs natively in Claude Code using WebFetch
 
@@ -17,26 +19,27 @@ A comprehensive Progressive Web App audit skill that goes beyond standard Lighth
 | Category | Points | What It Checks |
 |----------|--------|----------------|
 | Manifest Compliance | 20 | Required manifest fields (name, icons, display, colors) |
-| Advanced Manifest | 13 | Screenshots, shortcuts, i18n, maskable icons, widgets, note_taking |
+| Advanced Manifest | 15 | Screenshots, shortcuts, i18n, maskable icons, widgets, iOS splash screens |
 | Service Worker & Caching | 28 | Registration, events, cache strategies, skipWaiting, clients.claim, push, navigation preload |
-| Offline Capability | 10 | Fallback pages, app shell, offline indicators |
+| Offline Capability | 12 | Fallback pages, app shell, offline indicators, update UX |
 | Installability | 13 | HTTPS, manifest link, beforeinstallprompt, custom install UI |
 | Security | 16 | CSP, SRI, HTTPS, COOP/COEP, HSTS, Permissions-Policy |
 | Performance Signals | 14 | Render-blocking, lazy loading, resource hints, Core Web Vitals signals |
-| UX & Accessibility | 12 | Viewport, semantic HTML, ARIA, focus indicators, skip links |
+| UX & Accessibility | 17 | Viewport, safe areas, touch events, semantic HTML, ARIA, focus indicators |
 | SEO & Discoverability | 7 | Meta tags, Open Graph, structured data |
-| **PWA Advanced** | 17 | Cutting-edge PWA capabilities, Web Push |
+| PWA Advanced | 17 | Cutting-edge PWA capabilities, Web Push |
+| iOS Compatibility | 1 | Bonus for complete iOS meta tag set |
 
 ## Grading Scale
 
 | Grade | Score Range | Percentage |
 |-------|-------------|------------|
-| A+ | 135+ points | 90%+ |
-| A | 120-134 points | 80-89% |
-| B | 105-119 points | 70-79% |
-| C | 90-104 points | 60-69% |
-| D | 60-89 points | 40-59% |
-| F | <60 points | <40% |
+| A+ | 144+ points | 90%+ |
+| A | 128-143 points | 80-89% |
+| B | 112-127 points | 70-79% |
+| C | 96-111 points | 60-69% |
+| D | 64-95 points | 40-59% |
+| F | <64 points | <40% |
 
 ## Installation
 
@@ -83,7 +86,7 @@ Once installed, invoke the skill with:
 Claude will:
 1. Fetch the HTML from the URL
 2. Discover manifest and service worker locations
-3. Analyze both files against the 150-point checklist
+3. Analyze both files against the 160-point checklist
 4. Generate a detailed report with scores and recommendations
 
 ## Sample Output
@@ -93,22 +96,23 @@ Claude will:
 
 **URL:** https://example.com
 **Date:** 2026-02-04
-**Overall Score:** 132/150 (88%) — Grade: A
+**Overall Score:** 148/160 (93%) — Grade: A+
 
 ## Score Breakdown
 
 | Category | Score | Status |
 |----------|-------|--------|
-| Manifest Compliance | 18/20 | ✅ |
-| Advanced Manifest | 11/13 | ✅ |
+| Manifest Compliance | 20/20 | ✅ |
+| Advanced Manifest | 15/15 | ✅ |
 | Service Worker & Caching | 26/28 | ✅ |
-| Offline Capability | 10/10 | ✅ |
-| Installability | 12/13 | ✅ |
-| Security | 12/16 | ⚠️ |
+| Offline Capability | 12/12 | ✅ |
+| Installability | 13/13 | ✅ |
+| Security | 14/16 | ⚠️ |
 | Performance Signals | 14/14 | ✅ |
-| UX & Accessibility | 12/12 | ✅ |
+| UX & Accessibility | 17/17 | ✅ |
 | SEO & Discoverability | 5/7 | ⚠️ |
 | PWA Advanced | 12/17 | ⚠️ |
+| iOS Compatibility | 1/1 | ✅ |
 
 ## Critical Issues
 - None
@@ -140,10 +144,42 @@ Claude will:
 | Stale-while-revalidate | ❌ | ✅ |
 | `beforeinstallprompt` | ❌ | ✅ |
 | Push/notificationclick | ❌ | ✅ |
+| **iOS Safe Area checks** | ❌ | ✅ |
+| **iOS Splash Screens** | ❌ | ✅ |
+| **Touch Event handling** | ❌ | ✅ |
+| **Update UX patterns** | ❌ | ✅ |
 | Cache strategy analysis | Basic | Detailed |
-| iOS-specific guidance | Limited | Comprehensive |
+| iOS-specific guidance | Limited | **Comprehensive** |
 
-## v4.0.0 New Checks
+## v5.0.0 New Features (iOS & Mobile Focus)
+
+### iOS Safe Area Support (+4 points in UX)
+- `viewport-fit=cover` check for notch/Dynamic Island support
+- `env(safe-area-inset-*)` CSS usage detection
+- Fixed header/footer safe area handling
+
+### iOS Splash Screens (+2 points in Advanced Manifest)
+- `<link rel="apple-touch-startup-image">` detection
+- Multiple device size coverage check
+
+### Touch Event Handling (+1 point in UX)
+- `onTouchEnd` handler detection for iOS compatibility
+- `touch-manipulation` CSS property check
+
+### Update UX (+2 points in Offline)
+- Service worker update notification patterns
+- Graceful update flow detection
+
+### Enhanced iOS/Safari Documentation
+- Comprehensive safe area guidance
+- Touch event best practices
+- Splash screen requirements
+- Z-index considerations for iOS
+
+## Previous Versions
+
+<details>
+<summary>v4.0.0 Changes</summary>
 
 ### Service Worker & Caching (+6 points)
 - `skipWaiting()` instant activation
@@ -181,6 +217,8 @@ Claude will:
 - Web Push configured
 - Notification permission UX
 
+</details>
+
 ## Contributing
 
 Contributions welcome! Please submit issues and PRs to improve the checklist or add new checks.
@@ -195,8 +233,9 @@ MIT License - see [LICENSE](LICENSE) for details.
 - [Service Workers | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)
 - [PWA Checklist | web.dev](https://web.dev/pwa-checklist/)
 - [Workbox | Google](https://developer.chrome.com/docs/workbox/)
+- [Safe Area Insets | WebKit](https://webkit.org/blog/7929/designing-websites-for-iphone-x/)
 
 ---
 
-**Version:** 4.0.0
+**Version:** 5.0.0
 **Author:** [@emrahub](https://github.com/emrahub)

@@ -1,5 +1,61 @@
 # Changelog
 
+## [5.0.0] - 2026-02-04
+
+### Added
+
+#### iOS Safe Area Support (+4 points in UX & Accessibility)
+- **viewport-fit=cover check** (+2 pts) — Required for iPhone notch/Dynamic Island safe area access
+- **Safe area CSS usage** (+2 pts) — Detects `env(safe-area-inset-*)` usage for fixed elements
+
+#### iOS Splash Screens (+2 points in Advanced Manifest)
+- **apple-touch-startup-image detection** (+2 pts) — iOS requires separate splash images for each device size
+
+#### Touch Event Handling (+1 point in UX & Accessibility)
+- **Touch event handlers** (+1 pt) — Detects `onTouchEnd` handlers and `touch-manipulation` CSS for iOS compatibility
+
+#### Update UX (+2 points in Offline Capability)
+- **Update prompt shown to user** (+1 pt) — Detects SW update notification patterns
+- **Graceful update flow** (+1 pt) — Detects user-controlled update implementation
+
+#### iOS Compatibility Bonus (+1 point, new category)
+- **Complete iOS meta tag set** (+1 pt) — Bonus for having all iOS-specific meta tags
+
+#### Enhanced iOS/Safari Documentation
+- Comprehensive safe area handling guidance
+- Touch event best practices for iOS PWA mode
+- Splash screen requirements and media query patterns
+- Z-index considerations for iOS Safari
+
+### Changed
+- **BREAKING**: Total scoring increased from 150 to **160 points**
+- UX & Accessibility: 12 → 17 points
+- Advanced Manifest: 13 → 15 points
+- Offline Capability: 10 → 12 points
+- Added new Category 11: iOS Compatibility (1 point bonus)
+- Updated grading scale thresholds:
+  - A+: 144+ points (90%+)
+  - A: 128-143 points (80-89%)
+  - B: 112-127 points (70-79%)
+  - C: 96-111 points (60-69%)
+  - D: 64-95 points (40-59%)
+  - F: <64 points (<40%)
+- Expanded iOS/Safari limitations section with practical implementation guidance
+- Added warnings for missing safe area handling and iOS splash screens
+
+### Why This Version
+
+This release focuses on iOS and mobile compatibility, addressing real-world issues discovered during PWA development:
+
+1. **iPhone Notch/Dynamic Island**: Without proper safe area handling, content is obscured in PWA mode
+2. **Touch Events**: `onClick` handlers don't always fire on iOS PWAs — `onTouchEnd` is essential
+3. **Splash Screens**: iOS shows blank white screen without proper startup images
+4. **Update UX**: Users should be notified of updates and control when they're applied
+
+These checks ensure PWAs work correctly on iPhones, which represent a significant portion of mobile users.
+
+---
+
 ## [4.0.0] - 2026-02-04
 
 ### Added

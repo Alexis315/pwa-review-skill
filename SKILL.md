@@ -1,6 +1,6 @@
 ---
 name: pwa-review
-description: Comprehensive 150-point PWA audit beyond Lighthouse - analyzes manifest, service worker, offline capabilities, security, and advanced PWA features
+description: Comprehensive 160-point PWA audit beyond Lighthouse - analyzes manifest, service worker, offline capabilities, security, iOS compatibility, and advanced PWA features
 user_invocable: true
 args:
   - name: url
@@ -12,22 +12,23 @@ args:
 
 # PWA Review Skill
 
-A comprehensive Progressive Web App audit that goes beyond standard Lighthouse testing. This skill analyzes PWAs across 10 categories with a 150-point scoring system, including advanced features that typical audits miss.
+A comprehensive Progressive Web App audit that goes beyond standard Lighthouse testing. This skill analyzes PWAs across 11 categories with a 160-point scoring system, including advanced features and iOS-specific compatibility checks that typical audits miss.
 
 ## Scoring Overview
 
 | Category | Points | Focus |
 |----------|--------|-------|
 | Manifest Compliance | 20 | Essential manifest fields |
-| Advanced Manifest | 13 | Enhanced manifest features |
+| Advanced Manifest | 15 | Enhanced manifest features + iOS splash |
 | Service Worker & Caching | 28 | SW implementation quality |
-| Offline Capability | 10 | Offline functionality |
+| Offline Capability | 12 | Offline functionality + update UX |
 | Installability | 13 | Install requirements |
 | Security | 16 | Security measures |
 | Performance Signals | 14 | Performance optimization |
-| UX & Accessibility | 12 | User experience |
+| UX & Accessibility | 17 | User experience + iOS safe areas |
 | SEO & Discoverability | 7 | Search optimization |
 | PWA Advanced | 17 | Cutting-edge PWA features |
+| iOS Compatibility | 1 | iOS-specific meta tags (bonus) |
 
 **Grading Scale:** A+ (90%+), A (80-89%), B (70-79%), C (60-69%), D (40-59%), F (<40%)
 
@@ -64,9 +65,11 @@ From the HTML, identify:
 - `<meta name="theme-color" content="...">`
 - `<meta name="apple-mobile-web-app-capable" content="...">`
 - `<meta name="apple-mobile-web-app-status-bar-style" content="...">`
-- `<meta name="viewport" content="...">`
+- `<meta name="mobile-web-app-capable" content="...">`
+- `<meta name="viewport" content="...">` (check for `viewport-fit=cover`)
 - `<meta http-equiv="Content-Security-Policy" content="...">`
 - `<link rel="apple-touch-icon" href="...">`
+- `<link rel="apple-touch-startup-image" ...>` (iOS splash screens)
 
 ### Step 3: Fetch Manifest
 
@@ -120,7 +123,7 @@ Output a markdown report following the template at the end of this document.
 
 **Critical Blocker:** If manifest is missing entirely, this category scores 0/20.
 
-### Category 2: Advanced Manifest Features (13 points)
+### Category 2: Advanced Manifest Features (15 points)
 
 | Check | Points | How to Verify |
 |-------|--------|---------------|
@@ -135,6 +138,9 @@ Output a markdown report following the template at the end of this document.
 | Maskable icon present | 1 | icons array has item with purpose="maskable" or "any maskable" |
 | `note_taking` object | 1 | manifest.note_taking exists (ChromeOS lock screen notes) |
 | `widgets` array | 1 | manifest.widgets exists (Windows 11 Widgets Board) |
+| iOS splash screens present | 2 | `<link rel="apple-touch-startup-image">` tags for multiple device sizes |
+
+**iOS Splash Screen Note:** iOS requires separate `<link rel="apple-touch-startup-image">` tags for each device size. Without these, iOS shows a blank white screen during PWA launch. Check for multiple media queries covering different device dimensions.
 
 ### Category 3: Service Worker & Caching (28 points)
 
@@ -158,7 +164,7 @@ Output a markdown report following the template at the end of this document.
 
 **Critical Blocker:** If no service worker, this category scores 0/28.
 
-### Category 4: Offline Capability (10 points)
+### Category 4: Offline Capability (12 points)
 
 | Check | Points | How to Verify |
 |-------|--------|---------------|
@@ -166,6 +172,10 @@ Output a markdown report following the template at the end of this document.
 | App shell resources precached | 3 | install event caches core HTML/CSS/JS files |
 | Offline indicator in UI (code pattern) | 2 | Code checks navigator.onLine or listens to online/offline events |
 | Network-first or cache-first strategy evident | 2 | fetch handler has clear strategy pattern |
+| Update prompt shown to user | 1 | Code handles SW update with user notification (e.g., "New version available") |
+| Graceful update flow | 1 | Update doesn't force reload without warning, user can choose when to update |
+
+**Update UX Note:** Good PWAs notify users when updates are available and let them choose when to apply the update. Look for patterns like `useRegisterSW`, `workbox-window`, or custom SW update handling with user-facing notifications.
 
 ### Category 5: Installability Requirements (13 points)
 
@@ -213,17 +223,24 @@ Output a markdown report following the template at the end of this document.
 | CLS prevention | 1 | Images have width/height, no layout shifts expected |
 | Critical CSS inlined | 1 | Critical styles in <head> or preloaded |
 
-### Category 8: UX & Accessibility (12 points)
+### Category 8: UX & Accessibility (17 points)
 
 | Check | Points | How to Verify |
 |-------|--------|---------------|
 | Responsive viewport meta | 2 | <meta name="viewport" content="width=device-width, initial-scale=1"> |
+| `viewport-fit=cover` for safe areas | 2 | Viewport meta includes `viewport-fit=cover` (required for iOS notch/Dynamic Island) |
+| Safe area CSS usage | 2 | Code uses `env(safe-area-inset-*)` for fixed/sticky elements |
 | Semantic HTML structure | 2 | <main>, <nav>, <header>, <footer> tags present |
 | ARIA landmarks or roles | 2 | role="..." or aria-* attributes found |
 | Language declared | 2 | <html lang="..."> attribute present |
 | Touch-friendly targets | 2 | No evidence of tiny click targets (qualitative) |
+| Touch event handling for iOS | 1 | Critical buttons have `onTouchEnd` handlers or `touch-manipulation` CSS |
 | Focus indicators visible | 1 | :focus styles not removed, visible outlines (qualitative) |
 | Skip to main content link | 1 | Skip link present for keyboard navigation |
+
+**iOS Safe Area Note:** iPhone notch and Dynamic Island require special handling. Without `viewport-fit=cover` and `env(safe-area-inset-*)` CSS, content may be obscured or buttons may be unreachable in PWA standalone mode. Fixed headers should use `padding-top: env(safe-area-inset-top)` and bottom navigation should account for `safe-area-inset-bottom`.
+
+**Touch Event Note:** On iOS, `onClick` handlers may not fire reliably in PWA mode. Critical action buttons (update, install, submit) should include `onTouchEnd` handlers as backup. The CSS property `touch-manipulation` prevents double-tap zoom delays.
 
 ### Category 9: SEO & Discoverability (7 points)
 
@@ -252,6 +269,14 @@ Output a markdown report following the template at the end of this document.
 | Web Push configured | 1 | VAPID or gcm_sender_id in manifest |
 | Notification permission UX | 1 | Permission requested after user action, not on load |
 
+### Category 11: iOS Compatibility Bonus (1 point)
+
+| Check | Points | How to Verify |
+|-------|--------|---------------|
+| Complete iOS meta tag set | 1 | Has `apple-mobile-web-app-capable`, `apple-mobile-web-app-status-bar-style`, AND `mobile-web-app-capable` |
+
+**Note:** This is a bonus point for PWAs that have complete iOS compatibility meta tags. The individual checks are scored in their respective categories, but having the complete set demonstrates attention to cross-platform compatibility.
+
 ---
 
 ## Issue Classification
@@ -273,6 +298,10 @@ Output a markdown report following the template at the end of this document.
 - Missing meta description
 - No skipWaiting/clients.claim
 - No beforeinstallprompt handling
+- Missing `viewport-fit=cover` (iOS safe areas won't work)
+- No `env(safe-area-inset-*)` usage for fixed elements
+- Missing iOS splash screens
+- No update notification UX for users
 
 ### Informational (Nice to Have)
 - Missing advanced manifest features
@@ -293,7 +322,7 @@ Generate the report in this exact format:
 
 **URL:** [analyzed URL]
 **Date:** [current date]
-**Overall Score:** [X]/150 ([percentage]%) — Grade: [letter grade]
+**Overall Score:** [X]/160 ([percentage]%) — Grade: [letter grade]
 
 ---
 
@@ -302,15 +331,16 @@ Generate the report in this exact format:
 | Category | Score | Status |
 |----------|-------|--------|
 | Manifest Compliance | X/20 | [status emoji] |
-| Advanced Manifest | X/13 | [status emoji] |
+| Advanced Manifest | X/15 | [status emoji] |
 | Service Worker & Caching | X/28 | [status emoji] |
-| Offline Capability | X/10 | [status emoji] |
+| Offline Capability | X/12 | [status emoji] |
 | Installability | X/13 | [status emoji] |
 | Security | X/16 | [status emoji] |
 | Performance Signals | X/14 | [status emoji] |
-| UX & Accessibility | X/12 | [status emoji] |
+| UX & Accessibility | X/17 | [status emoji] |
 | SEO & Discoverability | X/7 | [status emoji] |
 | PWA Advanced | X/17 | [status emoji] |
+| iOS Compatibility | X/1 | [status emoji] |
 
 Status: Pass (80%+), Warn (50-79%), Fail (<50%)
 
@@ -359,7 +389,7 @@ Status: Pass (80%+), Warn (50-79%), Fail (<50%)
 
 ---
 
-*Generated by PWA Review Skill v4.0.0*
+*Generated by PWA Review Skill v5.0.0*
 ```
 
 ---
@@ -396,11 +426,35 @@ Status: Pass (80%+), Warn (50-79%), Fail (<50%)
 
 When generating the report, include these platform-specific notes if relevant:
 
-- iOS Safari: Push notifications not fully supported (use apple-mobile-web-app-* meta tags)
-- iOS Safari: Storage limited to ~50MB
+### Installation & Capabilities
+- iOS Safari: `beforeinstallprompt` event not supported (users must manually "Add to Home Screen")
+- iOS Safari: Push notifications require iOS 16.4+ and explicit user permission
+- iOS Safari: Storage limited to ~50MB (may be evicted under storage pressure)
 - iOS Safari: No persistent storage API
-- iOS Safari: beforeinstallprompt event not supported
 - Safari: Service worker scope limitations more strict
+
+### Safe Area & Display (Critical for PWA Mode)
+- **Notch/Dynamic Island**: Without `viewport-fit=cover` in viewport meta, `env(safe-area-inset-*)` won't work
+- **Fixed Headers**: Must use `padding-top: env(safe-area-inset-top)` to avoid content being hidden behind notch
+- **Fixed Bottom Elements**: Must use `padding-bottom: env(safe-area-inset-bottom)` for home indicator area
+- **Status Bar**: `apple-mobile-web-app-status-bar-style` can be `default`, `black`, or `black-translucent`
+- PWA mode on iOS shows no browser chrome - safe area handling is essential
+
+### Touch Events & Interactions
+- `onClick` handlers may not fire reliably on some iOS versions in PWA mode
+- Add `onTouchEnd` as backup for critical buttons (install, update, submit actions)
+- Use `touch-manipulation` CSS to eliminate 300ms tap delay and prevent double-tap zoom
+- Use `-webkit-tap-highlight-color: transparent` for clean visual feedback
+- Use `-webkit-user-select: none` on interactive elements to prevent text selection
+
+### Splash Screens
+- iOS requires `<link rel="apple-touch-startup-image">` with media queries for each device size
+- Without splash screens, iOS shows blank white screen during PWA launch
+- Each iPhone/iPad dimension needs its own splash image (portrait and landscape)
+
+### Z-Index Considerations
+- Toast/notification components must have high z-index (e.g., `z-[9999]`) to appear above fixed headers
+- iOS Safari has stricter stacking context behavior than other browsers
 
 ---
 
