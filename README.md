@@ -2,9 +2,9 @@
 
 A comprehensive Progressive Web App (PWA) audit tool that works as a **Claude Skill**. It analyzes any PWA for technical compliance, performance, offline capability, and UX quality — generating a professional scored report.
 
-Think of it as a **Lighthouse alternative** that runs inside Claude, with actionable insights and a 108-point scoring system across 9 categories.
+Think of it as a **Lighthouse alternative** that runs inside Claude, with actionable insights and a **123-point scoring system across 10 categories** — including PWA-exclusive checks that Lighthouse doesn't have.
 
-![Score: A+](https://img.shields.io/badge/Max%20Score-108%20pts-brightgreen)
+![Score: A+](https://img.shields.io/badge/Max%20Score-123%20pts-brightgreen)
 ![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow)
 
@@ -22,7 +22,7 @@ Think of it as a **Lighthouse alternative** that runs inside Claude, with action
 - **UX & Accessibility** — Semantic HTML, ARIA landmarks, viewport, language attributes
 - **Actionable Reports** — Every finding includes a "How to Fix" code snippet and reference links
 
-## 📊 Scoring System (108 pts total)
+## 📊 Scoring System (123 pts total)
 
 | Category | Max Points | Key Checks |
 |----------|-----------|------------|
@@ -35,6 +35,20 @@ Think of it as a **Lighthouse alternative** that runs inside Claude, with action
 | ⚡ Performance Signals | 10 | Blocking resources, lazy loading, preload, fonts |
 | 🎨 UX & Accessibility | 10 | Semantic HTML, ARIA, viewport, lang, theme-color meta |
 | 🔍 SEO & Discoverability | 7 | title, meta description, Open Graph, canonical URL |
+| 🚀 **PWA Advanced** | 15 | handle_links, launch_handler, file/protocol handlers, iOS warnings |
+
+### 🚀 PWA Advanced Capabilities — UNIQUE (Not in Lighthouse)
+
+This category includes PWA-exclusive checks that **no other tool audits**:
+
+- **handle_links** — In-app link handling preference
+- **launch_handler** — App window management (navigate-existing, focus-existing)
+- **file_handlers** — Register as file type handler (.pdf, .txt, etc.)
+- **protocol_handlers** — Custom URL schemes (web+myapp://)
+- **scope_extensions** — Multi-origin PWA support
+- **edge_side_panel** — Microsoft Edge sidebar integration
+- **tabbed display** — Multi-tab PWA experience
+- **iOS PWA warnings** — Push notification, badge, sync limitations
 
 **Grading Scale (percentage-based):**
 

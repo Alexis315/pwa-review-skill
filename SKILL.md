@@ -1,6 +1,6 @@
 ---
 name: pwa-review
-description: Performs comprehensive PWA technical audits analyzing manifest.json, service worker, offline behavior, installability, security, performance, SEO, and UX. Triggered when reviewing PWAs, checking manifests, analyzing service workers, auditing PWA readiness, or when users mention "Lighthouse alternative".
+description: Performs comprehensive PWA technical audits with PWA-exclusive checks that Lighthouse doesn't have. Analyzes manifest.json, service worker, offline behavior, installability, security, performance, SEO, UX, and advanced PWA capabilities (handle_links, launch_handler, file/protocol handlers, iOS warnings). Triggered when reviewing PWAs, checking manifests, analyzing service workers, or auditing PWA readiness.
 argument-hint: [url]
 allowed-tools: Bash, Read, WebFetch
 ---
@@ -15,7 +15,7 @@ Analyze Progressive Web Apps for technical compliance, performance, and UX quali
 /pwa-review https://example.com
 ```
 
-**Output**: Scored report with 9 categories (108 pts max), letter grade (A+ to F), and actionable recommendations.
+**Output**: Scored report with 10 categories (123 pts max), letter grade (A+ to F), and actionable recommendations. Includes PWA-exclusive checks not found in Lighthouse.
 
 ## Workflow
 

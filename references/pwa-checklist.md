@@ -1,6 +1,6 @@
-# PWA Best Practices Checklist & Scoring — v2.2
+# PWA Best Practices Checklist & Scoring — v2.3
 
-Total: 108 points across 9 categories.
+Total: 123 points across 10 categories.
 
 ## 1. Manifest Compliance (20 pts)
 
@@ -111,7 +111,7 @@ Total: 108 points across 9 categories.
 | Theme color meta | 1 | `<meta name="theme-color">` in HTML |
 | noscript fallback | — | `<noscript>` tag for JS-disabled users (Lighthouse) |
 
-## 9. SEO & Discoverability (7 pts) — NEW
+## 9. SEO & Discoverability (7 pts)
 
 | Check | Pts | Criteria |
 |-------|-----|----------|
@@ -120,9 +120,38 @@ Total: 108 points across 9 categories.
 | Open Graph | 2 | og:title, og:description, og:image (3+ tags = 2pts) |
 | canonical URL | 1 | `<link rel="canonical">` defined |
 
+## 10. PWA Advanced Capabilities (15 pts) — UNIQUE (Not in Lighthouse)
+
+| Check | Pts | Criteria |
+|-------|-----|----------|
+| handle_links | 2 | `"preferred"` for in-app link handling |
+| launch_handler | 2 | client_mode: navigate-existing, focus-existing |
+| file_handlers | 2 | Valid action + accept MIME types |
+| protocol_handlers | 2 | Valid protocol + url with %s placeholder |
+| scope_extensions | 1 | Multi-origin PWA support |
+| edge_side_panel | 1 | Microsoft Edge sidebar support |
+| tabbed display | 1 | `"tabbed"` in display_override |
+| screenshots form_factor | 1 | Both wide + narrow form factors |
+| shortcuts icons | 1 | All shortcuts have 96x96 icons |
+| share_target | 1 | Valid action + params + optional enctype |
+| related_applications | 1 | Listed but NOT blocking (prefer_related=false) |
+| iOS warnings | — | Push/badge/sync limitations (info only) |
+
+### Why These Checks Matter
+
+These are **PWA-exclusive** features that Lighthouse doesn't audit:
+
+- **handle_links**: Controls whether links in scope open in PWA or browser
+- **launch_handler**: Prevents duplicate app instances, controls focus behavior
+- **file_handlers**: Register PWA as handler for file types (.pdf, .txt, etc.)
+- **protocol_handlers**: Custom URL schemes (web+myapp://)
+- **scope_extensions**: Allow PWA to span multiple origins
+- **edge_side_panel**: Enable PWA in Edge sidebar
+- **tabbed**: Multi-tab PWA experience (experimental)
+
 ## Grading Scale
 
-Grades are based on **percentage** of total score (108 pts max):
+Grades are based on **percentage** of total score (123 pts max):
 
 | Percentage | Grade | Label |
 |------------|-------|-------|

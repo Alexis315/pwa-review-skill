@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Analyze PWA resources and generate scored findings. v2.2 — comprehensive audit."""
+"""Analyze PWA resources and generate scored findings. v2.3 — comprehensive audit with PWA-exclusive checks."""
 
 import argparse
 import json
@@ -52,6 +52,14 @@ FIX_HINTS = {
     "no_title": 'Add a descriptive `<title>` tag (10-70 chars) in `<head>`.',
     "no_meta_desc": 'Add `<meta name="description" content="Your description (50-160 chars)">` in `<head>`.',
     "no_noscript": 'Add `<noscript>Your app requires JavaScript to run.</noscript>` in `<body>` for accessibility.',
+    # PWA Advanced Capabilities hints
+    "no_handle_links": 'Add `"handle_links": "preferred"` to manifest.json for in-app link handling.',
+    "no_launch_handler": 'Add `"launch_handler": {"client_mode": "navigate-existing"}` to control launch behavior.',
+    "invalid_file_handler": 'Ensure file_handlers have valid `action` URL and `accept` MIME types.',
+    "invalid_protocol_handler": 'Ensure protocol_handlers have valid `protocol` and `url` with %s placeholder.',
+    "no_screenshots_formfactor": 'Add `form_factor: "wide"` and `"narrow"` to screenshots for richer install UI.',
+    "shortcut_missing_icon": 'Add icons to shortcuts: `"icons": [{"src": "/icon.png", "sizes": "96x96"}]`.',
+    "ios_pwa_warning": 'iOS PWA limitations: No push notifications, limited background sync, no app badges. Consider native wrapper for full iOS support.',
 }
 
 
@@ -705,6 +713,183 @@ class PWAAnalyzer:
 
         return {"score": min(score, 7), "max": 7}
 
+    # ── 10. PWA Advanced Capabilities (15 pts) — UNIQUE, NOT IN LIGHTHOUSE ──
+    def analyze_pwa_capabilities(self) -> dict:
+        """Analyze advanced PWA capabilities that Lighthouse doesn't check."""
+        score = 0
+        cat = "PWA Advanced"
+        m = self.manifest or {}
+
+        # ── 1. handle_links (2 pts) - Link capture behavior ──
+        handle_links = m.get("handle_links")
+        if handle_links:
+            score += 2
+            self._add("passed", cat, f"handle_links: '{handle_links}' (in-app link handling)")
+            if handle_links == "preferred":
+                self._add("info", cat, "Links in scope will open in PWA instead of browser")
+        else:
+            self._add("warnings", cat, "No handle_links — links may open in browser", "", "no_handle_links")
+
+        # ── 2. launch_handler deep validation (2 pts) ──
+        launch = m.get("launch_handler")
+        if launch:
+            client_mode = launch.get("client_mode", [])
+            if isinstance(client_mode, str):
+                client_mode = [client_mode]
+            if client_mode:
+                score += 2
+                modes_str = ", ".join(client_mode)
+                self._add("passed", cat, f"launch_handler.client_mode: [{modes_str}]")
+                if "navigate-existing" in client_mode:
+                    self._add("info", cat, "Reuses existing window — prevents duplicate instances")
+                if "focus-existing" in client_mode:
+                    self._add("info", cat, "Focus existing window without navigation")
+            else:
+                score += 1
+                self._add("warnings", cat, "launch_handler has no client_mode specified", "", "no_launch_handler")
+        else:
+            self._add("info", cat, "No launch_handler (defaults to auto)", "", "no_launch_handler")
+
+        # ── 3. file_handlers validation (2 pts) ──
+        file_handlers = m.get("file_handlers", [])
+        if file_handlers:
+            valid_handlers = 0
+            for fh in file_handlers:
+                action = fh.get("action")
+                accept = fh.get("accept", {})
+                if action and accept:
+                    valid_handlers += 1
+                    extensions = []
+                    for mime, exts in accept.items():
+                        if isinstance(exts, list):
+                            extensions.extend(exts)
+                        else:
+                            extensions.append(exts)
+                    self._add("passed", cat, f"File handler: {action} accepts {', '.join(extensions[:5])}")
+            if valid_handlers > 0:
+                score += 2
+            else:
+                self._add("warnings", cat, "file_handlers configured but invalid", "", "invalid_file_handler")
+        else:
+            self._add("info", cat, "No file_handlers (optional — allows opening files with PWA)")
+
+        # ── 4. protocol_handlers validation (2 pts) ──
+        protocol_handlers = m.get("protocol_handlers", [])
+        if protocol_handlers:
+            valid_protocols = 0
+            for ph in protocol_handlers:
+                protocol = ph.get("protocol")
+                url = ph.get("url", "")
+                if protocol and "%s" in url:
+                    valid_protocols += 1
+                    self._add("passed", cat, f"Protocol handler: {protocol}:// → {url[:50]}")
+            if valid_protocols > 0:
+                score += 2
+            else:
+                self._add("warnings", cat, "protocol_handlers missing %s placeholder", "", "invalid_protocol_handler")
+        else:
+            self._add("info", cat, "No protocol_handlers (optional — custom URL schemes)")
+
+        # ── 5. scope_extensions (1 pt) - Multi-origin PWA ──
+        scope_ext = m.get("scope_extensions", [])
+        if scope_ext:
+            score += 1
+            origins = [se.get("origin", "?") for se in scope_ext[:3]]
+            self._add("passed", cat, f"scope_extensions: {', '.join(origins)} (multi-origin PWA)")
+        else:
+            self._add("info", cat, "No scope_extensions (single-origin PWA)")
+
+        # ── 6. edge_side_panel (1 pt) - Microsoft Edge sidebar ──
+        edge_panel = m.get("edge_side_panel") or m.get("sidebar")
+        if edge_panel:
+            score += 1
+            preferred = edge_panel.get("preferred_width", "default")
+            self._add("passed", cat, f"Edge side_panel configured (width: {preferred})")
+        else:
+            self._add("info", cat, "No edge_side_panel (Edge sidebar support)")
+
+        # ── 7. display_override with tabbed mode (1 pt) ──
+        display_override = m.get("display_override", [])
+        if "tabbed" in display_override:
+            score += 1
+            self._add("passed", cat, "Tabbed display mode enabled (multi-tab PWA)")
+        elif "window-controls-overlay" in display_override:
+            self._add("info", cat, "WCO enabled but no tabbed mode")
+        else:
+            self._add("info", cat, "No tabbed display mode (experimental multi-tab)")
+
+        # ── 8. Screenshots form_factor validation (1 pt) ──
+        screenshots = m.get("screenshots", [])
+        if screenshots:
+            has_wide = any(s.get("form_factor") == "wide" for s in screenshots)
+            has_narrow = any(s.get("form_factor") == "narrow" for s in screenshots)
+            if has_wide and has_narrow:
+                score += 1
+                self._add("passed", cat, "Screenshots with form_factor: wide + narrow")
+            elif has_wide or has_narrow:
+                self._add("warnings", cat, f"Only {'wide' if has_wide else 'narrow'} screenshots — add both", "", "no_screenshots_formfactor")
+            else:
+                self._add("warnings", cat, "Screenshots missing form_factor attribute", "", "no_screenshots_formfactor")
+
+        # ── 9. Shortcuts icon validation (1 pt) ──
+        shortcuts = m.get("shortcuts", [])
+        if shortcuts:
+            shortcuts_with_icons = sum(1 for s in shortcuts if s.get("icons"))
+            if shortcuts_with_icons == len(shortcuts):
+                score += 1
+                self._add("passed", cat, f"All {len(shortcuts)} shortcuts have icons")
+            elif shortcuts_with_icons > 0:
+                self._add("warnings", cat, f"{shortcuts_with_icons}/{len(shortcuts)} shortcuts have icons", "", "shortcut_missing_icon")
+            else:
+                self._add("warnings", cat, "Shortcuts have no icons — add 96x96 icons", "", "shortcut_missing_icon")
+
+        # ── 10. share_target validation (1 pt) ──
+        share_target = m.get("share_target")
+        if share_target:
+            action = share_target.get("action")
+            method = share_target.get("method", "GET")
+            params = share_target.get("params", {})
+            if action and params:
+                score += 1
+                param_names = list(params.keys())[:3]
+                self._add("passed", cat, f"share_target: {method} {action} (params: {', '.join(param_names)})")
+                if share_target.get("enctype") == "multipart/form-data":
+                    self._add("info", cat, "Share target accepts file uploads")
+            else:
+                self._add("warnings", cat, "share_target incomplete (needs action + params)")
+        else:
+            self._add("info", cat, "No share_target (Web Share Target API)")
+
+        # ── 11. iOS PWA limitations warning ──
+        apple_capable = re.search(r'apple-mobile-web-app-capable.*yes', self.html, re.I)
+        if apple_capable:
+            # Check for iOS-problematic features
+            has_push = self.sw and re.search(r'addEventListener.*push', self.sw, re.I)
+            has_badge = m.get("icons") and any(i.get("purpose") == "badge" for i in m.get("icons", []))
+            ios_issues = []
+            if has_push:
+                ios_issues.append("push notifications")
+            if has_badge:
+                ios_issues.append("badge icons")
+            if ios_issues:
+                self._add("warnings", cat, f"iOS Safari lacks support for: {', '.join(ios_issues)}", "", "ios_pwa_warning")
+            self._add("info", cat, "iOS PWA: No badging API, limited background sync, 50MB storage cap")
+
+        # ── 12. related_applications analysis (1 pt) ──
+        related = m.get("related_applications", [])
+        prefer_related = m.get("prefer_related_applications", False)
+        if related:
+            platforms = [r.get("platform", "?") for r in related]
+            if prefer_related:
+                self._add("critical", cat, f"prefer_related_applications=true BLOCKS PWA install!", "", "prefer_related")
+            else:
+                score += 1
+                self._add("passed", cat, f"Related apps: {', '.join(platforms)} (PWA install NOT blocked)")
+        elif prefer_related:
+            self._add("critical", cat, "prefer_related_applications=true but no apps listed!", "", "prefer_related")
+
+        return {"score": min(score, 15), "max": 15}
+
     # ── Run All ─────────────────────────────────────────────────────────
     def analyze(self) -> dict:
         categories = {
@@ -717,11 +902,12 @@ class PWAAnalyzer:
             "performance": self.analyze_performance(),
             "ux_accessibility": self.analyze_ux(),
             "seo": self.analyze_seo(),
+            "pwa_capabilities": self.analyze_pwa_capabilities(),
         }
         total = sum(c["score"] for c in categories.values())
         mx = sum(c["max"] for c in categories.values())
 
-        # Grade based on percentage (total max is now 108)
+        # Grade based on percentage (total max is now 123: 108 + 15 PWA Advanced)
         pct = (total / mx * 100) if mx > 0 else 0
         if pct >= 90: grade = "A+"
         elif pct >= 80: grade = "A"
