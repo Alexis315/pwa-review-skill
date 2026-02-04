@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.2] - 2026-02-05
+
+### Added
+- **Notification action buttons** (+1 pt) — Detects push notifications with actionable buttons (`actions` array) or `event.action` handling in notificationclick. Enables richer user interactions directly from notifications.
+
+### Changed
+- **Total scoring increased from 160 to 161 points**
+- Service Worker & Caching: 28 → 29 points
+
+---
+
 ## [5.0.1] - 2026-02-05
 
 ### Added
