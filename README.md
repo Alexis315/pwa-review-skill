@@ -2,9 +2,9 @@
 
 A comprehensive Progressive Web App (PWA) audit tool that works as a **Claude Skill**. It analyzes any PWA for technical compliance, performance, offline capability, and UX quality — generating a professional scored report.
 
-Think of it as a **Lighthouse alternative** that runs inside Claude, with actionable insights and a 100-point scoring system.
+Think of it as a **Lighthouse alternative** that runs inside Claude, with actionable insights and a 108-point scoring system across 9 categories.
 
-![Score: A+](https://img.shields.io/badge/Max%20Score-100%20pts-brightgreen)
+![Score: A+](https://img.shields.io/badge/Max%20Score-108%20pts-brightgreen)
 ![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow)
 
@@ -22,29 +22,30 @@ Think of it as a **Lighthouse alternative** that runs inside Claude, with action
 - **UX & Accessibility** — Semantic HTML, ARIA landmarks, viewport, language attributes
 - **Actionable Reports** — Every finding includes a "How to Fix" code snippet and reference links
 
-## 📊 Scoring System
+## 📊 Scoring System (108 pts total)
 
 | Category | Max Points | Key Checks |
 |----------|-----------|------------|
 | 📋 Manifest Compliance | 20 | name, display, icons, theme_color, scope |
-| 🧩 Advanced Manifest | 10 | screenshots, shortcuts, categories, display_override, share_target |
+| 🧩 Advanced Manifest | 11 | screenshots, shortcuts, lang, categories, display_override |
 | ⚙️ Service Worker & Caching | 20 | Events, cache strategy, versioning, Workbox detection |
 | 📡 Offline Capability | 10 | Fallback page, app shell, offline UI indicator |
 | 📲 Installability | 10 | HTTPS, manifest link, icon sizes, apple-touch-icon |
 | 🔒 Security | 10 | CSP, SRI, mixed content, SW scope, error handling |
 | ⚡ Performance Signals | 10 | Blocking resources, lazy loading, preload, fonts |
 | 🎨 UX & Accessibility | 10 | Semantic HTML, ARIA, viewport, lang, theme-color meta |
+| 🔍 SEO & Discoverability | 7 | title, meta description, Open Graph, canonical URL |
 
-**Grading Scale:**
+**Grading Scale (percentage-based):**
 
-| Score | Grade | Label |
-|-------|-------|-------|
-| 90–100 | A+ | Excellent PWA |
-| 80–89 | A | Strong PWA |
-| 70–79 | B | Good — Room for improvement |
-| 60–69 | C | Functional — Needs work |
-| 40–59 | D | Major gaps |
-| 0–39 | F | Not a functional PWA |
+| Percentage | Grade | Label |
+|------------|-------|-------|
+| 90%+ | A+ | Excellent PWA |
+| 80–89% | A | Strong PWA |
+| 70–79% | B | Good — Room for improvement |
+| 60–69% | C | Functional — Needs work |
+| 40–59% | D | Major gaps |
+| <40% | F | Not a functional PWA |
 
 ## 🚀 Usage
 
@@ -97,7 +98,7 @@ pwa-review/
 ├── SKILL.md                    # Claude skill definition & workflow
 ├── scripts/
 │   ├── discover_pwa.py         # Extracts manifest & SW URLs from HTML
-│   ├── analyze_pwa.py          # Core analysis engine (8 categories, 100 pts)
+│   ├── analyze_pwa.py          # Core analysis engine (9 categories, 108 pts)
 │   └── generate_report.py      # Markdown report generator
 ├── references/
 │   └── pwa-checklist.md        # Detailed scoring criteria & best practices
@@ -113,32 +114,31 @@ pwa-review/
 # PWA Review Report
 
 **URL:** https://example.com
-**Overall Score:** 83/100 — Grade: 🥇 A (Strong PWA)
+**Overall Score:** 95/108 — Grade: 🏆 A+ (Excellent PWA)
 
 | Category                        | Score         |
 |---------------------------------|---------------|
 | 📋 Manifest Compliance          | 18/20 (90%)   |
-| 🧩 Advanced Manifest            | 2/10  (20%)   |
+| 🧩 Advanced Manifest            | 10/11 (91%)   |
 | ⚙️ Service Worker & Caching     | 18/20 (90%)   |
 | 📡 Offline Capability           | 10/10 (100%)  |
 | 📲 Installability               | 9/10  (90%)   |
-| 🔒 Security                     | 6/10  (60%)   |
+| 🔒 Security                     | 8/10  (80%)   |
 | ⚡ Performance Signals           | 10/10 (100%)  |
 | 🎨 UX & Accessibility           | 10/10 (100%)  |
+| 🔍 SEO & Discoverability        | 7/7   (100%)  |
 
 ## 🚨 Critical Findings
 (none)
 
 ## ⚠️ Warnings
 - No screenshots — Chrome shows basic install dialog without them
-- No Content Security Policy meta tag detected
 
-## ✅ Passed Checks (35 items)
+## ✅ Passed Checks (40 items)
 ...
 
 ## 📌 Prioritized Recommendations
 1. Add screenshots with form_factor (wide + narrow) to manifest
-2. Add Content-Security-Policy meta tag or HTTP header
 ...
 ```
 
