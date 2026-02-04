@@ -2,26 +2,27 @@
 
 **URL:** https://example.com
 **Date:** 2026-02-04 14:30 UTC
-**Overall Score:** 132/150 — Grade: A (Excellent PWA)
+**Overall Score:** 148/160 (93%) — Grade: A+ (Excellent PWA)
 
 ## Score Overview
 
 ```
-Overall: [█████████████████████████████░░] 132/150
+Overall: [█████████████████████████████░░] 148/160
 ```
 
 | Category | Score | Bar |
 |----------|-------|-----|
-| Manifest Compliance | 18/20 (90%) | `[█████████░] 18/20` |
-| Advanced Manifest | 11/13 (85%) | `[████████░░] 11/13` |
+| Manifest Compliance | 20/20 (100%) | `[██████████] 20/20` |
+| Advanced Manifest | 15/15 (100%) | `[██████████] 15/15` |
 | Service Worker & Caching | 26/28 (93%) | `[█████████░] 26/28` |
-| Offline Capability | 8/10 (80%) | `[████████░░] 8/10` |
-| Installability | 12/13 (92%) | `[█████████░] 12/13` |
+| Offline Capability | 12/12 (100%) | `[██████████] 12/12` |
+| Installability | 13/13 (100%) | `[██████████] 13/13` |
 | Security | 12/16 (75%) | `[███████░░░] 12/16` |
 | Performance Signals | 14/14 (100%) | `[██████████] 14/14` |
-| UX & Accessibility | 12/12 (100%) | `[██████████] 12/12` |
+| UX & Accessibility | 17/17 (100%) | `[██████████] 17/17` |
 | SEO & Discoverability | 6/7 (86%) | `[████████░░] 6/7` |
-| PWA Advanced | 13/17 (76%) | `[███████░░░] 13/17` |
+| PWA Advanced | 12/17 (71%) | `[███████░░░] 12/17` |
+| iOS Compatibility | 1/1 (100%) | `[██████████] 1/1` |
 
 ## Warnings
 
@@ -33,7 +34,7 @@ These items need improvement:
 - **[Security]** Permissions-Policy not verifiable from HTML
 - **[SEO & Discoverability]** No canonical URL
 - **[PWA Advanced]** No handle_links — links may open in browser
-- **[PWA Advanced]** iOS Safari lacks support for: push notifications
+- **[PWA Advanced]** iOS Safari lacks support for: push notifications (requires iOS 16.4+)
 
 ## Passed Checks
 
@@ -57,6 +58,7 @@ These items need improvement:
 - **[Advanced Manifest]** lang: 'en' (i18n support)
 - **[Advanced Manifest]** Web Share Target API configured
 - **[Advanced Manifest]** Launch handler configured
+- **[Advanced Manifest]** iOS splash screens: 40 device sizes configured
 
 ### Service Worker
 - **[Service Worker]** Service worker registration found
@@ -75,7 +77,9 @@ These items need improvement:
 ### Offline & Installability
 - **[Offline]** Offline fallback page detected
 - **[Offline]** App shell (HTML/CSS/JS) precached
-- **[Offline]** Offline state detection in UI
+- **[Offline]** Offline state detection in UI (online/offline events)
+- **[Offline]** Update prompt shown to user (New version available notification)
+- **[Offline]** Graceful update flow (user controls when to update)
 - **[Installability]** Manifest linked in HTML
 - **[Installability]** Served over HTTPS
 - **[Installability]** SW fetch handler (install requirement)
@@ -105,20 +109,28 @@ These items need improvement:
 - **[Performance]** CLS: Images have explicit dimensions
 - **[Performance]** Critical CSS inlined in <head>
 
-### UX & SEO
+### UX & Accessibility (iOS Safe Area Support)
 - **[UX & A11y]** Responsive viewport configured
-- **[UX & A11y]** Splash screen ready
+- **[UX & A11y]** viewport-fit=cover for iOS safe areas
+- **[UX & A11y]** Safe area CSS: env(safe-area-inset-*) used for fixed elements
+- **[UX & A11y]** Touch event handling: onTouchEnd handlers on critical buttons
+- **[UX & A11y]** touch-manipulation CSS for 300ms tap delay prevention
 - **[UX & A11y]** Semantic HTML: 6 landmarks
 - **[UX & A11y]** ARIA: 6 attributes
 - **[UX & A11y]** lang attribute on <html>
-- **[UX & A11y]** iOS status bar styling
+- **[UX & A11y]** iOS status bar styling (black-translucent)
 - **[UX & A11y]** Theme color meta tag
 - **[UX & A11y]** Focus indicators preserved
 - **[UX & A11y]** Skip to main content link present
-- **[UX & A11y]** Fallback content for JS-disabled browsers (<noscript>)
 - **[SEO & Discoverability]** title: 'Test Progressive Web App' (26 chars)
 - **[SEO & Discoverability]** meta description: 120 chars
 - **[SEO & Discoverability]** Open Graph: og:title, og:description, og:image
+
+### iOS Compatibility
+- **[iOS Compatibility]** apple-mobile-web-app-capable: yes
+- **[iOS Compatibility]** apple-mobile-web-app-status-bar-style: black-translucent
+- **[iOS Compatibility]** mobile-web-app-capable: yes
+- **[iOS Compatibility]** Complete iOS meta tag set — Bonus point earned!
 
 ### PWA Advanced Capabilities (Unique — Not in Lighthouse)
 - **[PWA Advanced]** launch_handler.client_mode: [navigate-existing]
@@ -135,13 +147,20 @@ These items need improvement:
 - **[Advanced Manifest]** No 'dir' field — defaults to 'auto'
 - **[Advanced Manifest]** No note_taking (ChromeOS lock screen notes integration)
 - **[Advanced Manifest]** No widgets (Windows 11 Widgets Board integration)
-- **[Offline]** No static asset caching in SW
 - **[PWA Advanced]** Reuses existing window — prevents duplicate instances
 - **[PWA Advanced]** No scope_extensions (single-origin PWA)
 - **[PWA Advanced]** No edge_side_panel (Edge sidebar support)
 - **[PWA Advanced]** No tabbed display mode (experimental multi-tab)
 - **[PWA Advanced]** iOS PWA: No badging API, limited background sync, 50MB storage cap
 - **[PWA Advanced]** No iarc_rating_id (IARC age rating for app store distribution)
+
+## iOS/Safari Specific Notes
+
+This PWA has excellent iOS support:
+- Safe area insets properly handled for notch/Dynamic Island
+- Touch events use onTouchEnd for iOS PWA compatibility
+- iOS splash screens configured for all device sizes
+- Status bar styled for immersive experience
 
 ## Prioritized Recommendations
 
@@ -173,7 +192,7 @@ Or better: set via HTTP header.
 - **SEO & Discoverability**: https://web.dev/articles/discoverable
 - **PWA Advanced**: https://developer.chrome.com/docs/capabilities
 - **PWA Checklist**: https://web.dev/articles/pwa-checklist
-- **Lighthouse**: https://developer.chrome.com/docs/lighthouse
+- **iOS Safe Areas**: https://webkit.org/blog/7929/designing-websites-for-iphone-x/
 
 ---
-*Generated by PWA Review Skill v4.0.0*
+*Generated by PWA Review Skill v5.0.0*
