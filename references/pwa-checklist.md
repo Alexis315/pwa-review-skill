@@ -109,6 +109,7 @@ Total: 108 points across 9 categories.
 | Lang attribute | 1 | `<html lang="...">` |
 | iOS status bar | 1 | apple-mobile-web-app-status-bar-style |
 | Theme color meta | 1 | `<meta name="theme-color">` in HTML |
+| noscript fallback | — | `<noscript>` tag for JS-disabled users (Lighthouse) |
 
 ## 9. SEO & Discoverability (7 pts) — NEW
 

@@ -51,6 +51,7 @@ FIX_HINTS = {
     "no_manifest_lang": 'Add `"lang": "en"` (or your BCP-47 language code) to manifest.json for i18n support.',
     "no_title": 'Add a descriptive `<title>` tag (10-70 chars) in `<head>`.',
     "no_meta_desc": 'Add `<meta name="description" content="Your description (50-160 chars)">` in `<head>`.',
+    "no_noscript": 'Add `<noscript>Your app requires JavaScript to run.</noscript>` in `<body>` for accessibility.',
 }
 
 
@@ -634,6 +635,12 @@ class PWAAnalyzer:
             score += 1; self._add("passed", cat, "Theme color meta tag")
         else:
             self._add("warnings", cat, "No <meta name='theme-color'>", "", "no_theme_meta")
+
+        # Noscript fallback (Lighthouse PWA requirement - no pts, warning/passed only)
+        if re.search(r'<noscript[^>]*>', html, re.I):
+            self._add("passed", cat, "Fallback content for JS-disabled browsers (<noscript>)")
+        else:
+            self._add("warnings", cat, "No <noscript> fallback for JS-disabled users", "", "no_noscript")
 
         return {"score": min(score, 10), "max": 10}
 
