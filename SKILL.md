@@ -1,6 +1,6 @@
 ---
 name: pwa-review
-description: Comprehensive 173-point PWA audit beyond Lighthouse - analyzes manifest, service worker, offline capabilities, security, iOS compatibility, and advanced PWA features
+description: Comprehensive 178-point PWA audit beyond Lighthouse - analyzes manifest, service worker, offline capabilities, security, iOS compatibility, and advanced PWA features
 user_invocable: true
 args:
   - name: url
@@ -12,7 +12,7 @@ args:
 
 # PWA Review Skill
 
-A comprehensive Progressive Web App audit that goes beyond standard Lighthouse testing. This skill analyzes PWAs across 11 categories with a 173-point scoring system, including advanced features and iOS-specific compatibility checks that typical audits miss.
+A comprehensive Progressive Web App audit that goes beyond standard Lighthouse testing. This skill analyzes PWAs across 11 categories with a 178-point scoring system, including advanced features and iOS-specific compatibility checks that typical audits miss.
 
 ## Scoring Overview
 
@@ -21,10 +21,10 @@ A comprehensive Progressive Web App audit that goes beyond standard Lighthouse t
 | Manifest Compliance | 20 | Essential manifest fields |
 | Advanced Manifest | 15 | Enhanced manifest features + iOS splash |
 | Service Worker & Caching | 29 | SW implementation quality |
-| Offline Capability | 14 | Offline functionality + update UX + state management |
+| Offline Capability | 17 | Offline functionality + storage + update UX |
 | Installability | 13 | Install requirements |
 | Security | 16 | Security measures |
-| Performance Signals | 14 | Performance optimization |
+| Performance Signals | 16 | Performance optimization + compression |
 | UX & Accessibility | 27 | User experience + iOS safe areas + mobile dropdowns + themes |
 | SEO & Discoverability | 7 | Search optimization |
 | PWA Advanced | 17 | Cutting-edge PWA features |
@@ -165,7 +165,7 @@ Output a markdown report following the template at the end of this document.
 
 **Critical Blocker:** If no service worker, this category scores 0/29.
 
-### Category 4: Offline Capability (14 points)
+### Category 4: Offline Capability (17 points)
 
 | Check | Points | How to Verify |
 |-------|--------|---------------|
@@ -177,10 +177,15 @@ Output a markdown report following the template at the end of this document.
 | Graceful update flow | 1 | Update doesn't force reload without warning, user can choose when to update |
 | Update state persistence | 1 | localStorage flag prevents update prompt re-appearing after update (e.g., `pwa-just-updated`) |
 | Touch event double-fire prevention | 1 | Update/action handlers prevent duplicate execution from onClick + onTouchEnd |
+| Persistent storage request | 1 | Code uses `navigator.storage.persist()` to prevent iOS data eviction |
+| IndexedDB offline storage | 1 | Code uses `indexedDB.open()` or `idb` library for structured offline data |
+| Storage quota monitoring | 1 | Code uses `navigator.storage.estimate()` for storage health checks |
 
 **Update UX Note:** Good PWAs notify users when updates are available and let them choose when to apply the update. Look for patterns like `useRegisterSW`, `workbox-window`, or custom SW update handling with user-facing notifications.
 
 **Update State Note:** After a user clicks "Update", the PWA reloads. Without state management, the update prompt may immediately re-appear because the new service worker is still "waiting". Use localStorage flags (e.g., `pwa-just-updated` with timestamp) to suppress the prompt for a brief period (30 seconds) after update completion. Also implement double-fire prevention for touch handlers - on iOS, both `onClick` and `onTouchEnd` may fire, causing duplicate updates.
+
+**Offline Storage Note:** For complex PWAs with user-generated content, localStorage alone is insufficient. Use IndexedDB for structured data storage (images, generation history, preferences). Request persistent storage with `navigator.storage.persist()` to prevent iOS from evicting data after 7 days of inactivity. Monitor storage quota with `navigator.storage.estimate()` to warn users before running out of space.
 
 ### Category 5: Installability Requirements (13 points)
 
@@ -214,7 +219,7 @@ Output a markdown report following the template at the end of this document.
 
 **Note:** Some security headers (HSTS, X-Content-Type-Options, Permissions-Policy) cannot be verified from HTML alone. Mark as "Unable to verify" unless response headers are available.
 
-### Category 7: Performance Signals (14 points)
+### Category 7: Performance Signals (16 points)
 
 | Check | Points | How to Verify |
 |-------|--------|---------------|
@@ -227,6 +232,12 @@ Output a markdown report following the template at the end of this document.
 | INP optimization signals | 1 | No long tasks, event handlers optimized (qualitative) |
 | CLS prevention | 1 | Images have width/height, no layout shifts expected |
 | Critical CSS inlined | 1 | Critical styles in <head> or preloaded |
+| Compression headers | 1 | Server returns `Content-Encoding: gzip` or `br` (note: verify via DevTools) |
+| Bundle chunking strategy | 1 | Build uses `manualChunks`, vendor splitting, or separate runtime chunks |
+
+**Compression Note:** Gzip/Brotli compression can reduce bundle sizes by 60-80%. This cannot be verified from HTML alone - check Network tab in DevTools for `Content-Encoding` response header. Build tools like `vite-plugin-compression` can generate pre-compressed `.gz` and `.br` files.
+
+**Bundle Chunking Note:** Good build configurations split vendor dependencies (React, UI libraries, i18n) into separate chunks. Look for patterns like `manualChunks` in Vite/Rollup config or webpack's `splitChunks`. This enables better caching (vendor chunks change less frequently) and parallel loading.
 
 ### Category 8: UX & Accessibility (27 points)
 
@@ -343,6 +354,11 @@ These patterns are frequently missed because they work in dark mode (the default
 - Missing shortcuts
 - No navigation preload
 - No stale-while-revalidate
+- No persistent storage request (iOS data may be evicted)
+- No IndexedDB usage (limited to localStorage)
+- No storage quota monitoring
+- No compression headers detected
+- No bundle chunking strategy evident
 
 ---
 
@@ -355,7 +371,7 @@ Generate the report in this exact format:
 
 **URL:** [analyzed URL]
 **Date:** [current date]
-**Overall Score:** [X]/173 ([percentage]%) — Grade: [letter grade]
+**Overall Score:** [X]/178 ([percentage]%) — Grade: [letter grade]
 
 ---
 
@@ -366,10 +382,10 @@ Generate the report in this exact format:
 | Manifest Compliance | X/20 | [status emoji] |
 | Advanced Manifest | X/15 | [status emoji] |
 | Service Worker & Caching | X/29 | [status emoji] |
-| Offline Capability | X/14 | [status emoji] |
+| Offline Capability | X/17 | [status emoji] |
 | Installability | X/13 | [status emoji] |
 | Security | X/16 | [status emoji] |
-| Performance Signals | X/14 | [status emoji] |
+| Performance Signals | X/16 | [status emoji] |
 | UX & Accessibility | X/27 | [status emoji] |
 | SEO & Discoverability | X/7 | [status emoji] |
 | PWA Advanced | X/17 | [status emoji] |
@@ -422,7 +438,7 @@ Status: Pass (80%+), Warn (50-79%), Fail (<50%)
 
 ---
 
-*Generated by PWA Review Skill v5.2.0*
+*Generated by PWA Review Skill v5.3.0*
 ```
 
 ---

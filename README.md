@@ -1,10 +1,10 @@
 # PWA Review Skill for Claude Code
 
-A comprehensive Progressive Web App audit skill that goes beyond standard Lighthouse testing. Analyzes PWAs across **11 categories** with a **173-point scoring system**, including advanced features and iOS-specific compatibility checks that typical audits miss.
+A comprehensive Progressive Web App audit skill that goes beyond standard Lighthouse testing. Analyzes PWAs across **11 categories** with a **178-point scoring system**, including advanced features and iOS-specific compatibility checks that typical audits miss.
 
 ## Features
 
-- **173-point scoring system** across 11 categories
+- **178-point scoring system** across 11 categories
 - **Beyond Lighthouse**: Checks advanced PWA features like `handle_links`, `launch_handler`, `file_handlers`, `protocol_handlers`
 - **iOS Compatibility**: Safe area handling, splash screens, touch events, notch/Dynamic Island support
 - **Core Web Vitals signals**: LCP, INP, and CLS optimization detection
@@ -21,10 +21,10 @@ A comprehensive Progressive Web App audit skill that goes beyond standard Lighth
 | Manifest Compliance | 20 | Required manifest fields (name, icons, display, colors) |
 | Advanced Manifest | 15 | Screenshots, shortcuts, i18n, maskable icons, widgets, iOS splash screens |
 | Service Worker & Caching | 29 | Registration, events, cache strategies, skipWaiting, clients.claim, push, navigation preload |
-| Offline Capability | 14 | Fallback pages, app shell, offline indicators, update UX, state persistence |
+| Offline Capability | 17 | Fallback pages, app shell, offline indicators, update UX, IndexedDB, persistent storage |
 | Installability | 13 | HTTPS, manifest link, beforeinstallprompt, custom install UI |
 | Security | 16 | CSP, SRI, HTTPS, COOP/COEP, HSTS, Permissions-Policy |
-| Performance Signals | 14 | Render-blocking, lazy loading, resource hints, Core Web Vitals signals |
+| Performance Signals | 16 | Render-blocking, lazy loading, resource hints, Core Web Vitals signals, compression, chunking |
 | UX & Accessibility | 27 | Viewport, safe areas, touch events, semantic HTML, ARIA, mobile dropdowns, extended themes |
 | SEO & Discoverability | 7 | Meta tags, Open Graph, structured data |
 | PWA Advanced | 17 | Cutting-edge PWA capabilities, Web Push |
@@ -34,12 +34,12 @@ A comprehensive Progressive Web App audit skill that goes beyond standard Lighth
 
 | Grade | Score Range | Percentage |
 |-------|-------------|------------|
-| A+ | 156+ points | 90%+ |
-| A | 139-155 points | 80-89% |
-| B | 122-138 points | 70-79% |
-| C | 104-121 points | 60-69% |
-| D | 70-103 points | 40-59% |
-| F | <70 points | <40% |
+| A+ | 161+ points | 90%+ |
+| A | 143-160 points | 80-89% |
+| B | 125-142 points | 70-79% |
+| C | 107-124 points | 60-69% |
+| D | 72-106 points | 40-59% |
+| F | <72 points | <40% |
 
 ## Installation
 
@@ -86,7 +86,7 @@ Once installed, invoke the skill with:
 Claude will:
 1. Fetch the HTML from the URL
 2. Discover manifest and service worker locations
-3. Analyze both files against the 173-point checklist
+3. Analyze both files against the 178-point checklist
 4. Generate a detailed report with scores and recommendations
 
 ## Sample Output
@@ -95,8 +95,8 @@ Claude will:
 # PWA Audit Report
 
 **URL:** https://example.com
-**Date:** 2026-02-04
-**Overall Score:** 160/173 (92%) — Grade: A+
+**Date:** 2026-02-07
+**Overall Score:** 165/178 (93%) — Grade: A+
 
 ## Score Breakdown
 
@@ -105,10 +105,10 @@ Claude will:
 | Manifest Compliance | 20/20 | ✅ |
 | Advanced Manifest | 15/15 | ✅ |
 | Service Worker & Caching | 27/29 | ✅ |
-| Offline Capability | 14/14 | ✅ |
+| Offline Capability | 17/17 | ✅ |
 | Installability | 13/13 | ✅ |
 | Security | 14/16 | ⚠️ |
-| Performance Signals | 14/14 | ✅ |
+| Performance Signals | 16/16 | ✅ |
 | UX & Accessibility | 25/27 | ✅ |
 | SEO & Discoverability | 5/7 | ⚠️ |
 | PWA Advanced | 12/17 | ⚠️ |
@@ -150,6 +150,19 @@ Claude will:
 | **Update UX patterns** | ❌ | ✅ |
 | Cache strategy analysis | Basic | Detailed |
 | iOS-specific guidance | Limited | **Comprehensive** |
+
+## v5.3.0 New Features (Offline Storage & Performance)
+
+### Offline Storage Enhancements (+3 points in Offline Capability)
+- **Persistent storage request** (+1 pt) — Detects `navigator.storage.persist()` for iOS data persistence
+- **IndexedDB offline storage** (+1 pt) — Detects `indexedDB.open()` or `idb` library for structured offline data
+- **Storage quota monitoring** (+1 pt) — Detects `navigator.storage.estimate()` for storage health checks
+
+### Performance Optimizations (+2 points in Performance Signals)
+- **Compression headers** (+1 pt) — Note about `Content-Encoding: gzip/br` verification
+- **Bundle chunking strategy** (+1 pt) — Detects `manualChunks`, vendor splitting patterns
+
+These checks address production PWA requirements discovered during LookNex implementation.
 
 ## v5.2.0 New Features (Extended Theme Checks)
 
@@ -263,5 +276,5 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-**Version:** 5.2.0
+**Version:** 5.3.0
 **Author:** [@emrahub](https://github.com/emrahub)

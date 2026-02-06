@@ -1,5 +1,40 @@
 # Changelog
 
+## [5.3.0] - 2026-02-07
+
+### Added
+
+#### Offline Storage Enhancements (+3 points in Offline Capability)
+- **Persistent storage request** (+1 pt) — Detects `navigator.storage.persist()` for iOS data persistence prevention
+- **IndexedDB offline storage** (+1 pt) — Detects `indexedDB.open()` or `idb` library for structured offline data management
+- **Storage quota monitoring** (+1 pt) — Detects `navigator.storage.estimate()` for storage health checks and warnings
+
+#### Performance Optimizations (+2 points in Performance Signals)
+- **Compression headers** (+1 pt) — Note about `Content-Encoding: gzip/br` verification via DevTools
+- **Bundle chunking strategy** (+1 pt) — Detects `manualChunks`, vendor splitting, or runtime chunk patterns
+
+### Changed
+- **Total scoring increased from 173 to 178 points**
+- Offline Capability: 14 → 17 points
+- Performance Signals: 14 → 16 points
+- Updated grading scale thresholds:
+  - A+: 161+ points (90%+)
+  - A: 143-160 points (80-89%)
+  - B: 125-142 points (70-79%)
+  - C: 107-124 points (60-69%)
+  - D: 72-106 points (40-59%)
+  - F: <72 points (<40%)
+
+### Notes
+Based on Flutter PWA optimization article and LookNex production implementation:
+- `navigator.storage.persist()` prevents iOS from evicting PWA data after 7 days of inactivity
+- IndexedDB enables offline storage for images, generation history, and complex data structures
+- `navigator.storage.estimate()` helps warn users before storage quota is exceeded
+- Gzip/Brotli compression can reduce bundle sizes by 60-80%
+- Vendor chunking improves caching efficiency and parallel loading
+
+---
+
 ## [5.2.0] - 2026-02-06
 
 ### Added
