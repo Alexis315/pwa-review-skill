@@ -1,5 +1,44 @@
 # Changelog
 
+## [5.4.0] - 2026-02-07
+
+### Added
+
+#### Service Worker & Caching Enhancements (+4 points)
+- **Multiple caching strategies** (+2 pts) — Detects usage of different strategies (CacheFirst, NetworkFirst, StaleWhileRevalidate) for different resource types
+- **Cache expiration config** (+1 pt) — Detects `maxEntries` or `maxAgeSeconds` for cache pruning
+- **SW message handler** (+1 pt) — Detects `addEventListener('message', ...)` for client-SW communication
+
+#### Offline Capability Enhancements (+2 points)
+- **Background sync client trigger** (+1 pt) — Detects `registration.sync.register()` call when coming back online
+- **Periodic sync registration** (+1 pt) — Detects `registration.periodicSync.register()` on app initialization
+
+#### Performance Signals Enhancement (+1 point)
+- **Network Information API usage** (+1 pt) — Detects `navigator.connection` for adaptive behavior on slow networks
+
+### Changed
+- **Total scoring increased from 178 to 185 points**
+- Service Worker & Caching: 29 → 33 points
+- Offline Capability: 17 → 19 points
+- Performance Signals: 16 → 17 points
+- Updated grading scale thresholds:
+  - A+: 167+ points (90%+)
+  - A: 148-166 points (80-89%)
+  - B: 130-147 points (70-79%)
+  - C: 111-129 points (60-69%)
+  - D: 74-110 points (40-59%)
+  - F: <74 points (<40%)
+
+### Notes
+Based on LookNex PWA deep dive analysis and real-world implementation gaps:
+- Many PWAs have sync handlers in SW but never trigger sync from client
+- Periodic sync requires explicit client-side registration with permission check
+- Network Information API enables adaptive UX on 2G/3G/saveData connections
+- Production PWAs need different caching strategies per resource type
+- Cache expiration prevents unbounded storage growth
+
+---
+
 ## [5.3.0] - 2026-02-07
 
 ### Added
