@@ -381,6 +381,18 @@ else echo "error: no bend on PATH and no BEND_CLI" >&2; exit 2; fi
 export BEND_NO_TELEMETRY=1
 ROOT="$PWD"
 T="$(mktemp -d "${TMPDIR:-/tmp}/hst.XXXXXX")"
+# Remove the scratch tree on exit unless the run ends with a problem verdict worth inspecting
+# (or HARNESS_SELFTEST_KEEP=1 is set). Clean runs used to leave a full copy behind every time,
+# and nineteen of them filled hz1's disk to 99% (2026-09-26).
+verdict=""
+cleanup_scratch() {
+  if [[ "${HARNESS_SELFTEST_KEEP:-0}" == 1 || ( -n "$verdict" && "$verdict" != OK ) ]]; then
+    echo "harness-selftest: scratch kept for inspection: $T" >&2
+  else
+    rm -rf -- "$T"
+  fi
+}
+trap cleanup_scratch EXIT
 sha="$(git rev-parse --short HEAD 2>/dev/null || echo none)"
 run_compiler() {
   local seconds="$1"; shift
